@@ -1,5 +1,4 @@
-# UrbanEats Cloud Kitchen Platform
-**IT3113 Advanced Web Technologies — Group Project (Year 3, Semester 1)**
+# UrbanEats Cloud Kitchen Platform 
 
 UrbanEats is a complete, database-driven, cloud kitchen web platform built with **HTML5, CSS3, PHP 8.x (back end), and MySQL/MariaDB**. The architecture enforces Third Normal Form (3NF), prepared statements via PDO, robust role-based security, CSRF protection, and a centralized audit trail.
 
