@@ -1,5 +1,6 @@
 # Local environment overrides
 config/db.local.php
+config/config.local.php
 
 # Log files
 logs/*.log

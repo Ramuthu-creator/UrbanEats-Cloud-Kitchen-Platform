@@ -8,6 +8,10 @@
 -- Component C: Ordering, Payment & Tracking
 -- ====================================================================
 
+-- Ensure database exists and is selected
+CREATE DATABASE IF NOT EXISTS `urbaneats_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `urbaneats_db`;
+
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS order_status_history;
 DROP TABLE IF EXISTS payments;
