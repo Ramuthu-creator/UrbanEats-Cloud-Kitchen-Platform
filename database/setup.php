@@ -23,6 +23,18 @@ if (!file_exists($sqlFile)) {
 $sqlContent = file_get_contents($sqlFile);
 
 try {
+    // Ensure MySQL database exists before attempting dbname-specific connection
+    try {
+        $dsnNoDb = sprintf("mysql:host=%s;port=%s;charset=%s", DB_HOST, DB_PORT, DB_CHARSET);
+        $serverPdo = new PDO($dsnNoDb, DB_USER, DB_PASS, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
+        $serverPdo->exec("CREATE DATABASE IF NOT EXISTS `" . DB_NAME . "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        echo "✓ Database '" . DB_NAME . "' verified/created on MySQL server.\n";
+    } catch (PDOException $preEx) {
+        // If MySQL server is unreachable, proceed to get_db (which reports or falls back)
+    }
+
     $db = get_db();
     $driverName = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
     echo "Connected using PDO driver: {$driverName}\n";
