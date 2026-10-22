@@ -1,0 +1,17 @@
+# Local environment overrides
+config/db.local.php
+
+# Log files
+logs/*.log
+!logs/.gitkeep
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Local databases
+database/*.sqlite
+
+# User uploads (keep directory with placeholder)
+public/uploads/*
+!public/uploads/.gitkeep
