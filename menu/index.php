@@ -1,37 +1,135 @@
 <?php
-
+// 1. Include required files (Using __DIR__ for accurate relative paths)
+require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/header.php';
+
+$pdo = get_db();
+
+// 2. GET parameters for Search, Filter, and Sort
+$search = $_GET['search'] ?? '';
+$category_id = filter_input(INPUT_GET, 'category', FILTER_VALIDATE_INT);
+$sort = $_GET['sort'] ?? 'name_asc';
+
+// 3. Fetch Categories for the dropdown filter
+$stmt_cats = $pdo->query("SELECT * FROM categories ORDER BY name ASC");
+$categories = $stmt_cats->fetchAll();
+
+// 4. SQL Query to fetch dishes dynamically
+$sql = "SELECT d.*, c.name as category_name 
+        FROM dishes d 
+        JOIN categories c ON d.category_id = c.id 
+        WHERE d.is_active = 1"; // Fetch only active dishes (not soft-deleted)
+$params = [];
+
+// If a search keyword is provided
+if (!empty($search)) {
+    $sql .= " AND (d.name LIKE ? OR d.description LIKE ?)";
+    $params[] = "%$search%"; 
+    $params[] = "%$search%";
+}
+
+// If a category is selected
+if ($category_id) {
+    $sql .= " AND d.category_id = ?";
+    $params[] = $category_id;
+}
+
+// Sorting logic
+$allowed_sorts = [
+    'name_asc' => 'd.name ASC', 
+    'price_asc' => 'd.price ASC', 
+    'price_desc' => 'd.price DESC'
+];
+$sort_query = $allowed_sorts[$sort] ?? 'd.name ASC';
+$sql .= " ORDER BY $sort_query";
+
+// 5. Execute the Query using Prepared Statements
+$stmt_dishes = $pdo->prepare($sql);
+$stmt_dishes->execute($params);
+$dishes = $stmt_dishes->fetchAll();
 ?>
 
-<div class="container">
-    <div class="auth-wrapper" style="min-height: calc(100vh - 350px);">
-        <div class="card" style="max-width: 650px; text-align: center; padding: 3rem 2rem;">
-            <span class="badge badge-staff" style="margin-bottom: 1.25rem;">Component B &bull; Student 2</span>
-            <div style="font-size: 3.5rem; margin-bottom: 1rem;">🍽️</div>
-            <h1 style="font-size: 2rem; margin-bottom: 0.75rem;">Menu, Catalogue & Inventory</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.7;">
-                This module is reserved for <strong>Student 2</strong> to build according to the project specifications:
-                public menu browsing, search, category filters, dish management, and inventory stock tracking.
-            </p>
+<!-- Custom CSS for Component B (Dark Theme) -->
+<style>
+    .menu-wrapper { max-width: 1200px; margin: 0 auto; padding: 40px 20px; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .menu-title { text-align: center; color: #f39c12; font-size: 2.5rem; margin-bottom: 30px; font-weight: bold; }
+    
+    .filter-bar { display: flex; gap: 15px; flex-wrap: wrap; background: #1e1e24; padding: 20px; border-radius: 10px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); justify-content: center; align-items: center; border: 1px solid #333;}
+    .filter-bar input, .filter-bar select { padding: 10px 15px; border-radius: 6px; border: 1px solid #444; background: #2a2a35; color: #fff; outline: none; font-size: 1rem; min-width: 200px;}
+    .btn-search { padding: 10px 20px; background: #f39c12; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 1rem; }
+    .btn-search:hover { background: #e67e22; }
+    .btn-clear { padding: 10px 20px; background: #555; color: #fff; text-decoration: none; border-radius: 6px; transition: 0.3s; font-weight: bold; }
+    .btn-clear:hover { background: #777; }
 
-            <div
-                style="background: var(--bg-card); border-radius: var(--radius-md); padding: 1.25rem; text-align: left; margin-bottom: 2rem; font-size: 0.85rem; border: 1px solid var(--border-color);">
-                <strong style="color: var(--primary);">Week 1 Integration Contract for Student 2:</strong>
-                <ul style="margin: 0.5rem 0 0 1.25rem; color: var(--text-secondary); line-height: 1.6;">
-                    <li>Owned Tables: <code>categories</code>, <code>dishes</code>, <code>inventory</code>,
-                        <code>stock_movements</code></li>
-                    <li>Shared Security Guards: Use <code>require_role(['admin', 'staff'])</code> from
-                        <code>includes/auth.php</code></li>
-                    <li>Audit Logging: Call <code>log_action('MENU_ITEM_ADDED', ...)</code> on changes</li>
-                    <li>Shared Contract: Expose <code>reduce_stock($dish_id, $qty)</code> for Component C checkout</li>
-                </ul>
+    .dish-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+    .dish-card { background: #2a2a35; border-radius: 12px; overflow: hidden; text-align: center; transition: all 0.3s ease; border: 1px solid #333; display: flex; flex-direction: column;}
+    .dish-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(243, 156, 18, 0.15); border-color: #f39c12; }
+    
+    .dish-img { width: 100%; height: 200px; object-fit: cover; background: #1a1a20; }
+    .dish-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
+    .dish-name { margin: 0 0 5px; font-size: 1.3rem; color: #fff; font-weight: bold; }
+    .dish-cat { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .dish-price { font-size: 1.5rem; color: #f39c12; font-weight: bold; margin-bottom: 15px; margin-top: auto;}
+    
+    .btn-view { display: inline-block; padding: 8px 20px; background: transparent; border: 2px solid #f39c12; color: #f39c12; text-decoration: none; border-radius: 20px; transition: 0.3s; font-weight: bold; font-size: 0.9rem;}
+    .btn-view:hover { background: #f39c12; color: #fff; }
+</style>
+
+<div class="menu-wrapper">
+    <h1 class="menu-title">🍽️ Explore Our Menu</h1>
+
+    <!-- Search / Filter Form -->
+    <form method="GET" action="index.php" class="filter-bar">
+        <input type="text" name="search" placeholder="Search dishes..." value="<?= htmlspecialchars($search) ?>">
+        
+        <select name="category">
+            <option value="">All Categories</option>
+            <?php foreach ($categories as $cat): ?>
+                <option value="<?= $cat['id'] ?>" <?= ($category_id == $cat['id']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($cat['name']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <select name="sort">
+            <option value="name_asc" <?= $sort == 'name_asc' ? 'selected' : '' ?>>Name (A-Z)</option>
+            <option value="price_asc" <?= $sort == 'price_asc' ? 'selected' : '' ?>>Price (Low to High)</option>
+            <option value="price_desc" <?= $sort == 'price_desc' ? 'selected' : '' ?>>Price (High to Low)</option>
+        </select>
+
+        <button type="submit" class="btn-search">Search</button>
+        <a href="index.php" class="btn-clear">Clear</a>
+    </form>
+
+    <!-- Dishes Display Grid -->
+    <div class="dish-grid">
+        <?php if (count($dishes) > 0): ?>
+            <?php foreach ($dishes as $dish): ?>
+                <div class="dish-card">
+                    <!-- Display Image (Using base_url for the correct path resolution) -->
+                    <?php if (!empty($dish['image_path'])): ?>
+                        <img src="<?= base_url('public/uploads/' . htmlspecialchars($dish['image_path'])) ?>" alt="<?= htmlspecialchars($dish['name']) ?>" class="dish-img">
+                    <?php else: ?>
+                        <div class="dish-img" style="display:flex; align-items:center; justify-content:center; color:#777; font-size: 1rem;">No Image</div>
+                    <?php endif; ?>
+                    
+                    <div class="dish-info">
+                        <h3 class="dish-name"><?= htmlspecialchars($dish['name']) ?></h3>
+                        <p class="dish-cat"><?= htmlspecialchars($dish['category_name']) ?></p>
+                        <p class="dish-price">LKR <?= number_format($dish['price'], 2) ?></p>
+                        <a href="detail.php?id=<?= $dish['id'] ?>" class="btn-view">View Details</a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: #1e1e24; border-radius: 10px; border: 1px dashed #444;">
+                <h3 style="color: #aaa; margin: 0;">No dishes found. Please try a different search!</h3>
             </div>
-
-            <a href="<?= base_url('public/index.php') ?>" class="btn btn-primary">
-                &larr; Return to UrbanEats Home
-            </a>
-        </div>
+        <?php endif; ?>
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+<?php 
+// 6. Include Shared Footer
+require_once __DIR__ . '/../includes/footer.php'; 
+?>
