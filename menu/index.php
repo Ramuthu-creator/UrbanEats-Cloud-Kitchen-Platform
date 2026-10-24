@@ -1,24 +1,25 @@
 <?php
-//  Include required files
+// 1. Include required files
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/header.php';
 
 $pdo = get_db();
 
-//  GET parameters for Search, Filter, Sort, and Pagination
+// 2. GET parameters for Search, Filter, Sort, and Pagination
 $search = $_GET['search'] ?? '';
 $category_id = filter_input(INPUT_GET, 'category', FILTER_VALIDATE_INT);
 $sort = $_GET['sort'] ?? 'name_asc';
 
 // Pagination variables
-$limit = 8; // Number of dishes per page
+$limit = 8; 
 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT) ?: 1;
 $offset = ($page - 1) * $limit;
 
-//  Fetch Categories for the dropdown filter
+// 3. Fetch Categories for the dropdown filter
 $stmt_cats = $pdo->query("SELECT * FROM categories ORDER BY name ASC");
 $categories = $stmt_cats->fetchAll();
 
+// 4. Build the WHERE clause dynamically for both Count and Data queries
 $where_sql = "WHERE d.is_active = 1"; 
 $params = [];
 
@@ -33,7 +34,7 @@ if ($category_id) {
     $params[] = $category_id;
 }
 
-//  Get Total number of dishes for Pagination logic
+// 5. Get Total number of dishes for Pagination logic
 $count_sql = "SELECT COUNT(*) FROM dishes d " . $where_sql;
 $stmt_count = $pdo->prepare($count_sql);
 $stmt_count->execute($params);
@@ -133,9 +134,8 @@ function build_url($new_page, $search, $category_id, $sort) {
         <?php if (count($dishes) > 0): ?>
             <?php foreach ($dishes as $dish): ?>
                 <div class="dish-card">
-                    <!-- Display Image (Using base_url for the correct path resolution) -->
-                    <?php if (!empty($dish['image_path'])): ?>
-                        <img src="<?= base_url('public/uploads/' . htmlspecialchars($dish['image_path'])) ?>" alt="<?= htmlspecialchars($dish['name']) ?>" class="dish-img">
+                    <?php if (!empty($dish['image_url'])): ?>
+                        <img src="<?= base_url('public/uploads/' . $dish['image_url']) ?>" alt="<?= htmlspecialchars($dish['name']) ?>" class="dish-img">
                     <?php else: ?>
                         <div class="dish-img" style="display:flex; align-items:center; justify-content:center; color:#777; font-size: 1rem;">No Image</div>
                     <?php endif; ?>
