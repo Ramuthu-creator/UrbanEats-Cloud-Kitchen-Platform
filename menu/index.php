@@ -133,8 +133,9 @@ function build_url($new_page, $search, $category_id, $sort) {
         <?php if (count($dishes) > 0): ?>
             <?php foreach ($dishes as $dish): ?>
                 <div class="dish-card">
-                    <?php if (!empty($dish['image_url'])): ?>
-                        <img src="<?= base_url('public/uploads/' . $dish['image_url']) ?>" alt="<?= htmlspecialchars($dish['name']) ?>" class="dish-img">
+                    <!-- Display Image (Using base_url for the correct path resolution) -->
+                    <?php if (!empty($dish['image_path'])): ?>
+                        <img src="<?= base_url('public/uploads/' . htmlspecialchars($dish['image_path'])) ?>" alt="<?= htmlspecialchars($dish['name']) ?>" class="dish-img">
                     <?php else: ?>
                         <div class="dish-img" style="display:flex; align-items:center; justify-content:center; color:#777; font-size: 1rem;">No Image</div>
                     <?php endif; ?>
