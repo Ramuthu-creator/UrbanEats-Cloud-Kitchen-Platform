@@ -90,3 +90,35 @@ function get_db(): PDO {
         throw $e;
     }
 }
+
+// Component C Checkout 
+function reduce_stock($pdo, $dish_id, $qty) {
+    try {
+        $pdo->beginTransaction();
+        
+        // view stock
+        $stmt = $pdo->prepare("SELECT quantity FROM inventory WHERE dish_id = ? FOR UPDATE");
+        $stmt->execute([$dish_id]);
+        $current_qty = $stmt->fetchColumn();
+
+        if ($current_qty !== false && $current_qty >= $qty) {
+            
+            $update_stmt = $pdo->prepare("UPDATE inventory SET quantity = quantity - ? WHERE dish_id = ?");
+            $update_stmt->execute([$qty, $dish_id]);
+            
+        
+            $log_stmt = $pdo->prepare("INSERT INTO stock_movements (dish_id, user_id, quantity_change, reason) VALUES (?, ?, ?, ?)");
+            $log_stmt->execute([$dish_id, 0, -$qty, 'System - Sold via Checkout']);
+            
+            $pdo->commit();
+            return true; 
+        } else {
+            
+            $pdo->rollBack();
+            return false; 
+        }
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        return false;
+    }
+}
