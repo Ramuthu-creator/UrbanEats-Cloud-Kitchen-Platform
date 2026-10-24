@@ -63,14 +63,12 @@ $currentUser = current_user();
                         </li>
 
                     <?php elseif ($currentRole === 'staff'): ?>
-                        <li class="nav-item">
-                            <a href="<?= base_url('orders/kitchen.php') ?>">Kitchen Queue 👨‍🍳</a>
-                        </li>
+                        
                         <li class="nav-item">
                             <a href="<?= base_url('menu/manage.php') ?>">Manage Dishes</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= base_url('menu/stock.php') ?>">Stock Control</a>
+                            <a href="<?= base_url('menu/stock_dashboard.php') ?>">Stock Control</a>
                         </li>
 
                     <?php elseif ($currentRole === 'admin'): ?>
