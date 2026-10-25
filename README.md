@@ -10,7 +10,7 @@ UrbanEats is a complete, database-driven, cloud kitchen web platform built with 
 |---|---|---|---|
 | **Component A** | **Student 1** | **Identity, Access & Administration:** Registration, login, roles, session hardening, throttling, user management, audit logs. | ✅ **100% Complete & Fully Implemented** |
 | **Component B** | Student 2 | **Menu, Catalogue & Inventory:** Categories, dishes, image uploads, whitelisted search/sort, stock movements, and `reduce_stock()` contract. | 🏗️ **Scaffolded & Space Reserved** |
-| **Component C** | Student 3 | **Ordering, Payment & Tracking:** Session cart, ACID checkout transaction, order stages workflow, kitchen queue, and sales reports. | 🏗️ **Scaffolded & Space Reserved** |
+| **Component C** | Student 3 | **Ordering, Payment & Tracking:** Session cart, ACID checkout transaction, order stages workflow, kitchen queue, and sales reports. | ✅ **100% Complete & Fully Implemented** |
 
 ---
 
@@ -91,6 +91,26 @@ All accounts come pre-configured in `database/urbaneats_db.sql` with secure Bcry
 
 ---
 
+## 🛒 Features Implemented in Component C (Student 3)
+
+### Front End
+- **Shopping Cart (`orders/cart.php`):** Session-based cart with dynamic running totals (item subtotal, delivery fee, coupon discounts, net grand total), interactive quantity increments/decrements (+/-), single-item removal, cart clearing, and live promo code application.
+- **Checkout Processing (`orders/checkout.php`):** Choice of fulfillment (Home Delivery with validated address vs Counter Pickup with zero delivery fee), contact phone validation, and simulated payment gateways (Cash on Delivery, 16-digit Card simulation, and Bank Transfer with deposit reference).
+- **Printable Confirmation & Invoice (`orders/confirmation.php`):** Official tax invoice with print stylesheet (`@media print`) that cleanly isolates the bill from site navigation, itemized dish breakdowns, customer details, and payment confirmation.
+- **Customer Order History (`orders/history.php`):** Customer dashboard showing past dining orders, order status badges, spend totals, and direct links to live tracking and invoices.
+- **Live Order Tracking (`orders/track.php`):** Step-by-step visual progression tracker (Placed -> Preparing -> Ready -> Out for Delivery/Pickup -> Completed) with pulsing active stage animations and full audit trail from `order_status_history`.
+- **Kitchen Order Queue (`orders/kitchen_queue.php`):** Real-time queue for kitchen staff to transition orders through their lifecycle with elapsed-time alerts, search filtering, and auto-refresh toggle.
+- **Sales & Revenue Reports (`admin/reports.php`):** Executive reporting console with date-range filters, quick presets (Today, Yesterday, Week, Month, All Time), KPI cards, top-selling dishes ranking, order status distribution, and daily ledger.
+
+### Back End & Transaction Architecture
+- **Single Database Transaction:** Checkout runs inside a single atomic transaction: inserts `orders`, inserts `order_items` (recording `unit_price` at time of purchase), inserts `payments`, inserts initial `order_status_history`, increments coupon `times_used`, and deducts inventory stock with rollback on failure.
+- **Live Database Price Re-Verification:** Never trusts client prices or availability; re-queries active dishes directly from `dishes` table.
+- **Finite State Machine (FSM):** Strict server-side validation preventing illegal workflow jumps (e.g., jumping from `PLACED` directly to `COMPLETED`).
+- **Atomic Stock Deduction:** Uses conditional SQL updates (`WHERE current_stock >= :qty`) preventing race conditions and negative inventory.
+- **Advanced SQL Analytics:** Advanced reports utilizing `JOIN`, `GROUP BY`, and aggregate functions (`SUM`, `COUNT`, `AVG`, `ROUND`).
+
+---
+
 ## 📁 Repository Directory Structure
 
 ```text
@@ -125,24 +145,27 @@ urbaneats/
 │   ├── dashboard.php           # Admin overview & metrics (Comp A)
 │   ├── users.php               # User CRUD, role changer, toggle status (Comp A)
 │   ├── audit_log.php           # Central audit trail inspector (Comp A)
-│   └── reports.php             # Sales & revenue reports [Comp C Scaffold]
-├── menu/                       # [Component B Scaffold - Student 2]
+│   └── reports.php             # Sales & revenue reports (Comp C)
+├── menu/                       # [Component B - Student 2]
 │   ├── index.php               # Public menu, categories, whitelisted sort
-│   ├── detail.php              # Dish detail view
+│   ├── detail.php              # Dish detail view & Add to Cart hook
 │   ├── manage.php              # Staff dish CRUD & soft-delete
-│   └── stock.php               # Stock dashboard, restock & wastage
-├── orders/                     # [Component C Scaffold - Student 3]
-│   ├── cart.php                # Session-based cart with live DB price checks
-│   ├── checkout.php            # Single DB transaction order placement
-│   ├── history.php             # Customer past orders
-│   ├── track.php               # Live order status timeline
-│   └── kitchen.php             # Kitchen order queue with state validation
+│   └── stock_dashboard.php     # Stock dashboard, restock & wastage
+├── orders/                     # [Component C - Student 3]
+│   ├── cart.php                # Session cart with live DB price checks & coupons
+│   ├── checkout.php            # Single DB transaction order placement & stock deduction
+│   ├── confirmation.php        # Printable tax invoice & confirmation
+│   ├── history.php             # Customer past orders & spend statistics
+│   ├── track.php               # Live order status timeline & audit trail
+│   └── kitchen_queue.php       # Kitchen order queue with FSM state machine validation
 ├── database/
 │   ├── urbaneats_db.sql        # Unified MySQL schema & seed data (>20 rows/table)
 │   └── setup.php               # Automated CLI database importer & setup
 ├── docs/
-│   ├── component_a_test_plan.md# 20 comprehensive test cases & results
-│   ├── component_a_viva_prep.md# Viva voce technical question guide & answers
+│   ├── component_a_test_plan.md# Component A: 20 comprehensive test cases & results
+│   ├── component_a_viva_prep.md# Component A: Viva voce technical question guide & answers
+│   ├── component_c_test_plan.md# Component C: 20 comprehensive test cases & results
+│   ├── component_c_viva_prep.md# Component C: Viva voce technical question guide & answers
 │   └── team_integration_guide.md# Guide for Teammates to build B & C
 └── logs/
     └── error.log               # Server error & exception log
@@ -151,6 +174,9 @@ urbaneats/
 ---
 
 ## 🧪 Testing Evidence & Viva Preparation
-- Comprehensive Test Plan: [`docs/component_a_test_plan.md`](file:///Users/ramuthutheniya/Documents/GitHub/UrbanEats%20Cloud%20Kitchen%20Platform/docs/component_a_test_plan.md) (20 test cases covering functional, validation, security, and edge cases).
-- Viva Voce Guide: [`docs/component_a_viva_prep.md`](file:///Users/ramuthutheniya/Documents/GitHub/UrbanEats%20Cloud%20Kitchen%20Platform/docs/component_a_viva_prep.md) (walkthroughs of login execution flow, `password_hash`, `session_regenerate_id`, 3NF justification, and live task modifications).
-- Team Integration Contract: [`docs/team_integration_guide.md`](file:///Users/ramuthutheniya/Documents/GitHub/UrbanEats%20Cloud%20Kitchen%20Platform/docs/team_integration_guide.md).
+- Component A Test Plan: [`docs/component_a_test_plan.md`](file:///docs/component_a_test_plan.md)
+- Component A Viva Voce Guide: [`docs/component_a_viva_prep.md`](file:///docs/component_a_viva_prep.md)
+- Component C Test Plan: [`docs/component_c_test_plan.md`](file:///docs/component_c_test_plan.md) (20 test cases covering cart, checkout atomicity, stock deduction, FSM, and SQL reports)
+- Component C Viva Voce Guide: [`docs/component_c_viva_prep.md`](file:///docs/component_c_viva_prep.md) (walkthroughs of price re-verification, checkout transaction rollback, state jump prevention, and top dishes query)
+- Team Integration Contract: [`docs/team_integration_guide.md`](file:///docs/team_integration_guide.md)
+

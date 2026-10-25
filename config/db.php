@@ -91,34 +91,98 @@ function get_db(): PDO {
     }
 }
 
-// Component C Checkout 
-function reduce_stock($pdo, $dish_id, $qty) {
-    try {
-        $pdo->beginTransaction();
-        
-        // view stock
-        $stmt = $pdo->prepare("SELECT quantity FROM inventory WHERE dish_id = ? FOR UPDATE");
-        $stmt->execute([$dish_id]);
-        $current_qty = $stmt->fetchColumn();
-
-        if ($current_qty !== false && $current_qty >= $qty) {
-            
-            $update_stmt = $pdo->prepare("UPDATE inventory SET quantity = quantity - ? WHERE dish_id = ?");
-            $update_stmt->execute([$qty, $dish_id]);
-            
-        
-            $log_stmt = $pdo->prepare("INSERT INTO stock_movements (dish_id, user_id, quantity_change, reason) VALUES (?, ?, ?, ?)");
-            $log_stmt->execute([$dish_id, 0, -$qty, 'System - Sold via Checkout']);
-            
-            $pdo->commit();
-            return true; 
+// Component C Checkout / Component B Inventory Bridge
+if (!function_exists('reduce_stock')) {
+    function reduce_stock($arg1, $arg2 = null, $arg3 = null): bool {
+        // Support both reduce_stock($dishId, $qty) and reduce_stock($pdo, $dishId, $qty)
+        if ($arg3 !== null) {
+            $pdo = $arg1;
+            $dishId = (int)$arg2;
+            $qty = (int)$arg3;
         } else {
-            
-            $pdo->rollBack();
-            return false; 
+            $pdo = get_db();
+            $dishId = (int)$arg1;
+            $qty = (int)$arg2;
         }
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        return false;
+
+        if ($dishId <= 0 || $qty <= 0) {
+            return false;
+        }
+
+        $manageTransaction = !$pdo->inTransaction();
+
+        try {
+            if ($manageTransaction) {
+                $pdo->beginTransaction();
+            }
+
+            // Check current stock with row locking (FOR UPDATE)
+            // Handle both column naming conventions (current_stock vs quantity)
+            $colName = 'current_stock';
+            try {
+                $checkStmt = $pdo->prepare("SELECT current_stock FROM inventory WHERE dish_id = ? FOR UPDATE");
+                $checkStmt->execute([$dishId]);
+                $currentStock = $checkStmt->fetchColumn();
+            } catch (Exception $e) {
+                $colName = 'quantity';
+                $checkStmt = $pdo->prepare("SELECT quantity FROM inventory WHERE dish_id = ? FOR UPDATE");
+                $checkStmt->execute([$dishId]);
+                $currentStock = $checkStmt->fetchColumn();
+            }
+
+            if ($currentStock === false || (int)$currentStock < $qty) {
+                if ($manageTransaction) {
+                    $pdo->rollBack();
+                }
+                return false;
+            }
+
+            // Update inventory deducting the quantity
+            $updateSql = "UPDATE inventory SET {$colName} = {$colName} - ? WHERE dish_id = ? AND {$colName} >= ?";
+            $updateStmt = $pdo->prepare($updateSql);
+            $updateStmt->execute([$qty, $dishId, $qty]);
+
+            if ($updateStmt->rowCount() <= 0) {
+                if ($manageTransaction) {
+                    $pdo->rollBack();
+                }
+                return false;
+            }
+
+            // Record in stock_movements
+            $userId = $_SESSION['user_id'] ?? null;
+            try {
+                $logStmt = $pdo->prepare(
+                    "INSERT INTO stock_movements (dish_id, user_id, movement_type, quantity, reason, created_at) 
+                     VALUES (?, ?, 'ORDER_DEDUCT', ?, 'Order checkout deduction', NOW())"
+                );
+                $logStmt->execute([$dishId, $userId, $qty]);
+            } catch (Exception $logEx) {
+                // Fallback for alternate schema if present
+                try {
+                    $logStmtAlt = $pdo->prepare(
+                        "INSERT INTO stock_movements (dish_id, user_id, quantity_change, reason) 
+                         VALUES (?, ?, ?, 'Order checkout deduction')"
+                    );
+                    $logStmtAlt->execute([$dishId, $userId ?: 0, -$qty]);
+                } catch (Exception $e2) {
+                    // Non-fatal for stock movement log
+                }
+            }
+
+            if ($manageTransaction) {
+                $pdo->commit();
+            }
+            return true;
+        } catch (Exception $e) {
+            if ($manageTransaction && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            if (function_exists('log_system_error')) {
+                log_system_error('REDUCE_STOCK_FAILURE', $e->getMessage());
+            }
+            return false;
+        }
     }
 }
+

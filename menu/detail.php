@@ -105,8 +105,17 @@ try {
         
         <div class="action-buttons">
             <a href="index.php" class="btn-back">&larr; Back to Menu</a>
-            <!-- Component C add to cart  -->
-            <button class="btn-cart" onclick="alert('Component C Hook: Proceed to Checkout or Add to Cart!')">Add to Order 🛒</button>
+            <!-- Component C Add to Cart Integration -->
+            <form method="POST" action="<?= base_url('orders/cart.php') ?>" style="display:inline-flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+                <?= csrf_input() ?>
+                <input type="hidden" name="action" value="add">
+                <input type="hidden" name="dish_id" value="<?= (int)$dish['id'] ?>">
+                <div style="display:inline-flex; align-items:center; background:#2a2a35; border:1px solid #444; border-radius:6px; overflow:hidden;">
+                    <label for="order_qty" style="padding:0 0.5rem; font-size:0.85rem; color:#aaa;">Qty:</label>
+                    <input type="number" id="order_qty" name="quantity" value="1" min="1" max="99" style="width:60px; padding:8px; background:transparent; border:none; color:#fff; font-weight:bold; text-align:center;">
+                </div>
+                <button type="submit" class="btn-cart">Add to Order 🛒</button>
+            </form>
         </div>
     </div>
 </div>
