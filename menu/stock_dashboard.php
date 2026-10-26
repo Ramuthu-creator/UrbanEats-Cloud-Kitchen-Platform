@@ -1,6 +1,11 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
-require_once __DIR__ . '/../includes/auth.php'; // Staff/Admin Only
+require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/csrf.php';
+
+// Restrict to Staff and Admin only
+require_role(['admin', 'staff']);
+
 require_once __DIR__ . '/../includes/header.php';
 
 $pdo = get_db();
@@ -8,33 +13,61 @@ $message = '';
 
 // Handle Stock Adjustments (Restock / Wastage)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'adjust_stock') {
-    $dish_id = filter_input(INPUT_POST, 'dish_id', FILTER_VALIDATE_INT);
-    $adj_type = $_POST['adj_type']; // 'restock' or 'wastage'
-    $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
-    $reason = trim($_POST['reason']);
-    $user_id = 1; // predict 1 user log 
+    validate_csrf_or_abort();
 
-    if ($dish_id && $quantity > 0 && !empty($reason)) {
-        // Wastage as Negative
+    $dish_id = filter_input(INPUT_POST, 'dish_id', FILTER_VALIDATE_INT);
+    $adj_type = $_POST['adj_type'] ?? ''; // 'restock' or 'wastage'
+    $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
+    $reason = trim($_POST['reason'] ?? '');
+    $user_id = current_user_id() ?? 1;
+
+    if ($dish_id && $quantity > 0 && !empty($reason) && in_array($adj_type, ['restock', 'wastage'], true)) {
+        $movement_type = ($adj_type === 'restock') ? 'RESTOCK' : 'WASTAGE';
         $qty_change = ($adj_type === 'wastage') ? -$quantity : $quantity;
 
         try {
             // Transaction-safe
             $pdo->beginTransaction();
 
+            // Fetch current stock
+            $checkStmt = $pdo->prepare("SELECT current_stock FROM inventory WHERE dish_id = ? FOR UPDATE");
+            $checkStmt->execute([$dish_id]);
+            $currentStock = $checkStmt->fetchColumn();
+
+            if ($currentStock === false) {
+                // Initialize inventory row if missing
+                $initStmt = $pdo->prepare("INSERT INTO inventory (dish_id, current_stock, reorder_level) VALUES (?, 0, 5)");
+                $initStmt->execute([$dish_id]);
+                $currentStock = 0;
+            }
+
+            if ($adj_type === 'wastage' && (int)$currentStock < $quantity) {
+                throw new Exception("Cannot record wastage of {$quantity} portions: only {$currentStock} portion(s) available in stock.");
+            }
+
             // Inventory Update
-            $stmt_inv = $pdo->prepare("UPDATE inventory SET quantity = quantity + ? WHERE dish_id = ?");
-            $stmt_inv->execute([$qty_change, $dish_id]);
+            $stmt_inv = $pdo->prepare("UPDATE inventory SET current_stock = current_stock + ? WHERE dish_id = ? AND (current_stock + ?) >= 0");
+            $stmt_inv->execute([$qty_change, $dish_id, $qty_change]);
 
             // Stock Movement Log
-            $stmt_log = $pdo->prepare("INSERT INTO stock_movements (dish_id, user_id, quantity_change, reason) VALUES (?, ?, ?, ?)");
-            $stmt_log->execute([$dish_id, $user_id, $qty_change, $reason]);
+            $stmt_log = $pdo->prepare("INSERT INTO stock_movements (dish_id, user_id, movement_type, quantity, reason, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
+            $stmt_log->execute([$dish_id, $user_id, $movement_type, $quantity, $reason]);
+
+            // Audit log tracking
+            if (function_exists('log_action')) {
+                $dishNameStmt = $pdo->prepare("SELECT name FROM dishes WHERE id = ?");
+                $dishNameStmt->execute([$dish_id]);
+                $dishName = $dishNameStmt->fetchColumn() ?: "Dish #{$dish_id}";
+                log_action('STOCK_ADJUSTMENT', "{$movement_type} of {$quantity} units for '{$dishName}'. Reason: {$reason}");
+            }
 
             $pdo->commit();
             $message = "<div class='alert alert-success'>Stock updated successfully!</div>";
         } catch (Exception $e) {
-            $pdo->rollBack();
-            $message = "<div class='alert alert-danger'>Error updating stock: " . $e->getMessage() . "</div>";
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            $message = "<div class='alert alert-danger'>Error updating stock: " . htmlspecialchars($e->getMessage()) . "</div>";
         }
     } else {
         $message = "<div class='alert alert-danger'>Invalid input. Please provide a valid quantity and reason.</div>";
@@ -42,11 +75,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // 2. Fetch Dashboard Data (JOIN dishes with inventory)
-$sql = "SELECT d.id as dish_id, d.name, i.quantity, i.reorder_level 
+$sql = "SELECT d.id as dish_id, d.name, COALESCE(i.current_stock, 0) AS current_stock, COALESCE(i.reorder_level, 5) AS reorder_level 
         FROM dishes d 
         LEFT JOIN inventory i ON d.id = i.dish_id 
         WHERE d.is_active = 1 
-        ORDER BY i.quantity ASC"; // create ASC order to show low stock items at the top
+        ORDER BY COALESCE(i.current_stock, 0) ASC";
 $dishes = $pdo->query($sql)->fetchAll();
 ?>
 
@@ -85,6 +118,7 @@ $dishes = $pdo->query($sql)->fetchAll();
     <div class="panel-box">
         <h3 style="margin-top: 0; color: #3498db;">➕ Make a Stock Adjustment</h3>
         <form method="POST" action="stock_dashboard.php" class="form-row">
+            <?= csrf_input() ?>
             <input type="hidden" name="action" value="adjust_stock">
             
             <div class="form-group">
@@ -92,7 +126,7 @@ $dishes = $pdo->query($sql)->fetchAll();
                 <select name="dish_id" class="form-control" required>
                     <option value="">-- Choose a dish --</option>
                     <?php foreach ($dishes as $d): ?>
-                        <option value="<?= $d['dish_id'] ?>"><?= htmlspecialchars($d['name']) ?> (Current: <?= $d['quantity'] ?? 0 ?>)</option>
+                        <option value="<?= $d['dish_id'] ?>"><?= htmlspecialchars($d['name']) ?> (Current: <?= $d['current_stock'] ?? 0 ?>)</option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -112,7 +146,7 @@ $dishes = $pdo->query($sql)->fetchAll();
 
             <div class="form-group" style="flex: 1.5;">
                 <label>Reason (Who & Why)</label>
-                <input type="text" name="reason" class="form-control" required placeholder="e.g. Added by Admin - New delivery">
+                <input type="text" name="reason" class="form-control" required placeholder="e.g. Restocked - Fresh batch prepared">
             </div>
 
             <button type="submit" class="btn-submit" style="margin-bottom: 2px;">Update Stock</button>
@@ -125,14 +159,14 @@ $dishes = $pdo->query($sql)->fetchAll();
         <thead>
             <tr>
                 <th>Dish Name</th>
-                <th>Current Quantity</th>
+                <th>Current Stock</th>
                 <th>Reorder Level</th>
                 <th>Status</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($dishes as $dish): 
-                $qty = (int)$dish['quantity'];
+                $qty = (int)$dish['current_stock'];
                 $reorder = (int)($dish['reorder_level'] ?? 5);
                 
                 // check stock status and assign badge

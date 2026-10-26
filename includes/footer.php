@@ -33,7 +33,7 @@
                 <ul class="footer-links">
                     <li><a href="<?= base_url('menu/index.php') ?>">Browse Food Menu</a></li>
                     <li><a href="<?= base_url('menu/manage.php') ?>">Dish Management (Staff)</a></li>
-                    <li><a href="<?= base_url('menu/stock.php') ?>">Stock & Wastage Dashboard</a></li>
+                    <li><a href="<?= base_url('menu/stock_dashboard.php') ?>">Stock & Wastage Dashboard</a></li>
                 </ul>
             </div>
 
@@ -42,7 +42,7 @@
                 <ul class="footer-links">
                     <li><a href="<?= base_url('orders/cart.php') ?>">Shopping Cart</a></li>
                     <li><a href="<?= base_url('orders/track.php') ?>">Live Order Tracker</a></li>
-                    <li><a href="<?= base_url('orders/kitchen.php') ?>">Kitchen Order Queue</a></li>
+                    <li><a href="<?= base_url('orders/kitchen_queue.php') ?>">Kitchen Order Queue</a></li>
                     <li><a href="<?= base_url('admin/reports.php') ?>">Sales & Revenue Reports</a></li>
                 </ul>
             </div>

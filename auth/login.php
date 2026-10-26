@@ -13,7 +13,7 @@ require_once __DIR__ . '/../includes/header.php';
 if (is_logged_in()) {
     $role = current_user_role();
     if ($role === 'admin') redirect('admin/dashboard.php');
-    if ($role === 'staff') redirect('orders/kitchen.php');
+    if ($role === 'staff') redirect('orders/kitchen_queue.php');
     redirect('public/index.php');
 }
 
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($role === 'admin') {
                 redirect('admin/dashboard.php');
             } elseif ($role === 'staff') {
-                redirect('orders/kitchen.php');
+                redirect('orders/kitchen_queue.php');
             } else {
                 redirect('public/index.php');
             }

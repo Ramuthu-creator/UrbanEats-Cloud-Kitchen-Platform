@@ -9,8 +9,8 @@ UrbanEats is a complete, database-driven, cloud kitchen web platform built with 
 | Component | Member | Role & Module Scope | Status |
 |---|---|---|---|
 | **Component A** | **Student 1** | **Identity, Access & Administration:** Registration, login, roles, session hardening, throttling, user management, audit logs. | ✅ **100% Complete & Fully Implemented** |
-| **Component B** | Student 2 | **Menu, Catalogue & Inventory:** Categories, dishes, image uploads, whitelisted search/sort, stock movements, and `reduce_stock()` contract. | 🏗️ **Scaffolded & Space Reserved** |
-| **Component C** | Student 3 | **Ordering, Payment & Tracking:** Session cart, ACID checkout transaction, order stages workflow, kitchen queue, and sales reports. | ✅ **100% Complete & Fully Implemented** |
+| **Component B** | **Student 2** | **Menu, Catalogue & Inventory:** Categories, dishes, secure image uploads, whitelisted search/sort, stock movements, and `reduce_stock()` contract. | ✅ **100% Complete & Fully Implemented** |
+| **Component C** | **Student 3** | **Ordering, Payment & Tracking:** Session cart, ACID checkout transaction, order stages workflow, kitchen queue, and sales reports. | ✅ **100% Complete & Fully Implemented** |
 
 ---
 
@@ -88,6 +88,25 @@ All accounts come pre-configured in `database/urbaneats_db.sql` with secure Bcry
 - **Reusable Guards (`includes/auth.php`):** `require_login()`, `require_role('admin')`, and `require_role(['admin', 'staff'])` protecting pages across the platform.
 - **Centralized Audit Logger (`log_action()`):** Shared function called by all components to record critical actions in `audit_log`.
 - **Pure CSS3 Design System:** Zero external CSS frameworks (no Bootstrap, no Tailwind). Hand-written CSS variables, responsive across 360px, 768px, and 1200px.
+
+---
+
+## 🍲 Features Implemented in Component B (Student 2)
+
+### Front End
+- **Public Menu Page (`menu/index.php`):** Responsive menu with category filtering, live keyword search, price/rating sorting, pagination, and dish ratings.
+- **Dish Detail Page (`menu/detail.php`):** High-resolution food presentation with ingredients description, real-time portions stock indicator, customer ratings breakdown, and direct "Add to Order" integration.
+- **Staff Dish Management Console (`menu/manage.php`):** Full CRUD for dishes with Add/Edit modes, image upload preview, soft-delete toggle, and catalogue overview.
+- **Category Management (`menu/manage_categories.php`):** Staff interface to create, edit, and delete food categories with automatic URL slug generation and dependency checks.
+- **Stock & Inventory Dashboard (`menu/stock_dashboard.php`):** Staff control center highlighting low-stock and out-of-stock dishes with Restock and Wastage adjustment tools.
+
+### Back End & Database Integration
+- **Full CRUD with Prepared Statements:** All dish and category queries parameterized via PDO.
+- **Soft Delete (`is_active` flag):** Deactivating a dish hides it from customer browsing while strictly preserving past orders and relational integrity in `order_items`.
+- **Whitelisted Search, Filter & Sort:** All `$_GET` search and filter parameters sanitized; sort order strictly validated against an approved whitelist array, neutralizing SQL injection vectors.
+- **Secure Image Upload:** Multi-level file verification checking upload errors, 5MB file size limit, extension whitelist (`jpg`, `jpeg`, `png`, `webp`), and true MIME type magic-byte inspection via `finfo_file()`, followed by cryptographic renaming.
+- **Transaction-Safe `reduce_stock()` Bridge:** Callable by Component C at checkout; uses row-level locking (`FOR UPDATE`) and conditional updates preventing negative inventory.
+- **Stock Movements Audit Trail:** Every restock or wastage adjustment recorded in `stock_movements` with user attribution, timestamp, quantity, and reason.
 
 ---
 
@@ -174,8 +193,10 @@ urbaneats/
 ---
 
 ## 🧪 Testing Evidence & Viva Preparation
-- Component A Test Plan: [`docs/component_a_test_plan.md`](file:///docs/component_a_test_plan.md)
-- Component A Viva Voce Guide: [`docs/component_a_viva_prep.md`](file:///docs/component_a_viva_prep.md)
+- Component A Test Plan: [`docs/component_a_test_plan.md`](file:///docs/component_a_test_plan.md) (20 test cases covering authentication, RBAC, throttling, and session hardening)
+- Component A Viva Voce Guide: [`docs/component_a_viva_prep.md`](file:///docs/component_a_viva_prep.md) (technical questions, architecture justification, and code walkthroughs)
+- Component B Test Plan: [`docs/component_b_test_plan.md`](file:///docs/component_b_test_plan.md) (18 test cases covering menu search, pagination, soft delete, image security, and stock transactions)
+- Component B Viva Voce Guide: [`docs/component_b_viva_prep.md`](file:///docs/component_b_viva_prep.md) (whitelisted sorting, secure image upload MIME validation, and reduce_stock race conditions)
 - Component C Test Plan: [`docs/component_c_test_plan.md`](file:///docs/component_c_test_plan.md) (20 test cases covering cart, checkout atomicity, stock deduction, FSM, and SQL reports)
 - Component C Viva Voce Guide: [`docs/component_c_viva_prep.md`](file:///docs/component_c_viva_prep.md) (walkthroughs of price re-verification, checkout transaction rollback, state jump prevention, and top dishes query)
 - Team Integration Contract: [`docs/team_integration_guide.md`](file:///docs/team_integration_guide.md)

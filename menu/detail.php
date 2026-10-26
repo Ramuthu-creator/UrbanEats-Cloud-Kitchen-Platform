@@ -33,20 +33,27 @@ if (!$dish) {
 }
 
 // 4. Fetch inventory stock (Component B Requirement)
-// We try to get the stock from the 'inventory' table. If not set, we show a default value.
 $stock = 0;
 try {
-    $stmt_stock = $pdo->prepare("SELECT quantity FROM inventory WHERE dish_id = ?");
+    $stmt_stock = $pdo->prepare("SELECT current_stock FROM inventory WHERE dish_id = ?");
     $stmt_stock->execute([$dish_id]);
     $stock_data = $stmt_stock->fetch();
     
     if ($stock_data) {
-        $stock = (int)$stock_data['quantity'];
+        $stock = (int)$stock_data['current_stock'];
     } else {
         $stock = 15; // Placeholder mock stock if inventory row isn't created yet
     }
 } catch (PDOException $e) {
-    $stock = "N/A"; // Fallback if inventory table doesn't exist yet
+    // Alternate column fallback
+    try {
+        $stmt_stock = $pdo->prepare("SELECT quantity FROM inventory WHERE dish_id = ?");
+        $stmt_stock->execute([$dish_id]);
+        $stock_data = $stmt_stock->fetch();
+        $stock = $stock_data ? (int)$stock_data['quantity'] : 0;
+    } catch (Exception $e2) {
+        $stock = "N/A";
+    }
 }
 
 // 5. Fetch dish rating statistics and customer reviews
@@ -113,11 +120,14 @@ try {
 
 <div class="detail-wrapper">
     <div class="detail-img-box">
-        <?php if (!empty($dish['image_url'])): ?>
-            <img src="<?= base_url('public/uploads/' . htmlspecialchars($dish['image_url'])) ?>" alt="<?= htmlspecialchars($dish['name']) ?>" class="detail-img">
-        <?php else: ?>
-            <div style="width: 100%; height: 400px; background: #2a2a35; display:flex; align-items:center; justify-content:center; color:#777; border-radius: 10px; border: 2px dashed #444;">No Image Available</div>
-        <?php endif; ?>
+        <?php 
+            $imgName = basename($dish['image_url'] ?? '');
+            $imgPath = __DIR__ . '/../public/uploads/' . $imgName;
+            $displayImg = (!empty($imgName) && file_exists($imgPath)) 
+                ? base_url('public/uploads/' . $imgName) 
+                : base_url('public/uploads/no-image.svg');
+        ?>
+        <img src="<?= $displayImg ?>" alt="<?= htmlspecialchars($dish['name']) ?>" class="detail-img">
     </div>
     
     <div class="detail-info">

@@ -31,7 +31,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <?php elseif (has_role('admin')): ?>
                     <a href="<?= base_url('admin/dashboard.php') ?>" class="btn btn-primary">Return to Admin Dashboard</a>
                 <?php elseif (has_role('staff')): ?>
-                    <a href="<?= base_url('orders/kitchen.php') ?>" class="btn btn-primary">Go to Kitchen Queue</a>
+                    <a href="<?= base_url('orders/kitchen_queue.php') ?>" class="btn btn-primary">Go to Kitchen Queue</a>
                 <?php else: ?>
                     <a href="<?= base_url('public/index.php') ?>" class="btn btn-primary">Return to UrbanEats Home</a>
                 <?php endif; ?>

@@ -2,6 +2,11 @@
 // 1. Include required files
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/csrf.php';
+
+// Restrict access to Admin and Staff only
+require_role(['admin', 'staff']);
+
 require_once __DIR__ . '/../includes/header.php';
 
 $pdo = get_db();
@@ -10,6 +15,7 @@ $edit_category = null;
 
 // 2. Handle Delete Request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+    validate_csrf_or_abort();
     $delete_id = filter_input(INPUT_POST, 'category_id', FILTER_VALIDATE_INT);
     if ($delete_id) {
         // Before deleting the category, check if there are any dishes associated with it
@@ -22,6 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         } else {
             $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ?");
             if ($stmt->execute([$delete_id])) {
+                if (function_exists('log_action')) {
+                    log_action('CATEGORY_DELETE', "Deleted category ID #{$delete_id}");
+                }
                 $message = "<div class='alert alert-success'>Category removed successfully!</div>";
             } else {
                 $message = "<div class='alert alert-danger'>Failed to delete category.</div>";
@@ -32,20 +41,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // 3. Handle Add / Edit Request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && in_array($_POST['action'], ['add', 'edit'])) {
-    $name = trim($_POST['name']);
-    $category_id = $_POST['category_id'] ?? null;
+    validate_csrf_or_abort();
+    $name = trim($_POST['name'] ?? '');
+    $category_id = filter_input(INPUT_POST, 'category_id', FILTER_VALIDATE_INT);
 
     if (!empty($name)) {
+        // Generate URL-friendly slug
+        $baseSlug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name), '-'));
+        if (empty($baseSlug)) {
+            $baseSlug = 'cat-' . substr(md5($name), 0, 6);
+        }
+
         if ($_POST['action'] === 'add') {
-            $stmt = $pdo->prepare("INSERT INTO categories (name) VALUES (?)");
-            if ($stmt->execute([$name])) {
+            // Ensure unique slug
+            $slug = $baseSlug;
+            $slugCheck = $pdo->prepare("SELECT COUNT(*) FROM categories WHERE slug = ?");
+            $slugCheck->execute([$slug]);
+            if ($slugCheck->fetchColumn() > 0) {
+                $slug = $baseSlug . '-' . substr(uniqid(), -4);
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO categories (name, slug, is_active) VALUES (?, ?, 1)");
+            if ($stmt->execute([$name, $slug])) {
+                if (function_exists('log_action')) {
+                    log_action('CATEGORY_CREATE', "Created category '{$name}'");
+                }
                 $message = "<div class='alert alert-success'>Category added successfully!</div>";
             } else {
                 $message = "<div class='alert alert-danger'>Failed to add category.</div>";
             }
         } elseif ($_POST['action'] === 'edit' && $category_id) {
-            $stmt = $pdo->prepare("UPDATE categories SET name = ? WHERE id = ?");
-            if ($stmt->execute([$name, $category_id])) {
+            $slug = $baseSlug;
+            $slugCheck = $pdo->prepare("SELECT COUNT(*) FROM categories WHERE slug = ? AND id != ?");
+            $slugCheck->execute([$slug, $category_id]);
+            if ($slugCheck->fetchColumn() > 0) {
+                $slug = $baseSlug . '-' . substr(uniqid(), -4);
+            }
+
+            $stmt = $pdo->prepare("UPDATE categories SET name = ?, slug = ? WHERE id = ?");
+            if ($stmt->execute([$name, $slug, $category_id])) {
+                if (function_exists('log_action')) {
+                    log_action('CATEGORY_UPDATE', "Updated category ID #{$category_id} to '{$name}'");
+                }
                 $message = "<div class='alert alert-success'>Category updated successfully!</div>";
             } else {
                 $message = "<div class='alert alert-danger'>Failed to update category.</div>";
@@ -116,6 +153,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name ASC")->fetchAl
     <div class="form-card">
         <h3><?= $edit_category ? '✏️ Edit Category' : '➕ Add New Category' ?></h3><br>
         <form method="POST" action="manage_categories.php">
+            <?= csrf_input() ?>
             <input type="hidden" name="action" value="<?= $edit_category ? 'edit' : 'add' ?>">
             
             <?php if ($edit_category): ?>
@@ -156,6 +194,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name ASC")->fetchAl
                     
                     <!-- Delete Form & Button -->
                     <form method="POST" action="manage_categories.php" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                        <?= csrf_input() ?>
                         <input type="hidden" name="action" value="delete">
                         <input type="hidden" name="category_id" value="<?= $cat['id'] ?>">
                         <button type="submit" class="btn-delete">Delete</button>

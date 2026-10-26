@@ -360,33 +360,78 @@ INSERT INTO categories (id, name, slug, description, is_active) VALUES
 (4, 'Appetizers & Bites', 'appetizers-bites', 'Crispy hot bites, devilled dishes, and savory treats', 1),
 (5, 'Desserts & Beverages', 'desserts-beverages', 'Traditional watalappan, caramel pudding, and fresh tropical fruit juices', 1);
 
--- 7. DISHES (Component B baseline)
+-- 7. DISHES (Component B: >= 20 realistic rows with actual image uploads)
 INSERT INTO dishes (id, category_id, name, description, price, image_url, is_active) VALUES
-(1, 1, 'Royal Chicken Dum Biryani', 'Slow-cooked fragrant basmati rice with tender spiced chicken, boiled egg, mint raita, and spicy gravy', 1650.00, 'uploads/biryani_chicken.jpg', 1),
-(2, 1, 'Hyderabadi Mutton Biryani', 'Premium Australian mutton layered with saffron rice and authentic caramelized shallots', 2450.00, 'uploads/biryani_mutton.jpg', 1),
-(3, 2, 'Cheese Chicken Kottu', 'Sri Lankan Godamba roti chopped with chicken, melted mozzarella cheese, vegetables, and creamy curry sauce', 1550.00, 'uploads/kottu_cheese_chicken.jpg', 1),
-(4, 2, 'Spicy Seafood Dolphin Kottu', 'Parotta chopped with fresh prawns, cuttlefish, chili paste, and leeks in thick devilled sauce', 1850.00, 'uploads/kottu_seafood.jpg', 1),
-(5, 3, 'Lamprais Special (Chicken)', 'Dutch-Burgher recipe wrapped in banana leaf: yellow rice, chicken curry, frikkadel meatball, blachan, seeni sambol, and ash plantain', 1750.00, 'uploads/lamprais.jpg', 1),
-(6, 4, 'Hot Butter Cuttlefish', 'Crisp battered cuttlefish tossed in seasoned butter, chili flakes, capsicum, and spring onions', 1950.00, 'uploads/hot_butter_cuttlefish.jpg', 1),
-(7, 4, 'Devilled Chicken Bites', 'Crispy chicken tenders tossed in sweet & spicy Sri Lankan devilled chili sauce', 1250.00, 'uploads/devilled_chicken.jpg', 1),
-(8, 5, 'Traditional Jaggery Watalappan', 'Steamed coconut custard with pure Kithul jaggery, cardamom, nutmeg, and cashew nuts', 550.00, 'uploads/watalappan.jpg', 1);
+(1, 1, 'Royal Chicken Dum Biryani', 'Slow-cooked fragrant basmati rice with tender spiced chicken, boiled egg, mint raita, and spicy gravy', 1650.00, 'Royal Chicken Dum Biryani.jpeg', 1),
+(2, 1, 'Hyderabadi Mutton Biryani', 'Premium Australian mutton layered with saffron rice and authentic caramelized shallots', 2450.00, 'Hyderabadi Mutton Biryani.jpg', 1),
+(3, 2, 'Cheese Chicken Kottu', 'Sri Lankan Godamba roti chopped with chicken, melted mozzarella cheese, vegetables, and creamy curry sauce', 1550.00, 'chees kottu.jpg', 1),
+(4, 2, 'Spicy Seafood Dolphin Kottu', 'Parotta chopped with fresh prawns, cuttlefish, chili paste, and leeks in thick devilled sauce', 1850.00, 'sea food .jpeg', 1),
+(5, 3, 'Lamprais Special (Chicken)', 'Dutch-Burgher recipe wrapped in banana leaf: yellow rice, chicken curry, frikkadel meatball, blachan, seeni sambol, and ash plantain', 1750.00, 'Lamprais Special (Chicken).jpeg', 1),
+(6, 4, 'Hot Butter Cuttlefish', 'Crisp battered cuttlefish tossed in seasoned butter, chili flakes, capsicum, and spring onions', 1950.00, 'het butter .jpeg', 1),
+(7, 4, 'Devilled Chicken Bites', 'Crispy chicken tenders tossed in sweet & spicy Sri Lankan devilled chili sauce', 1250.00, 'devel chicken.jpg', 1),
+(8, 5, 'Traditional Jaggery Watalappan', 'Steamed coconut custard with pure Kithul jaggery, cardamom, nutmeg, and cashew nuts', 550.00, 'Traditional Jaggery Watalappan.jpeg', 1),
+(9, 5, 'Fresh Mango Mojito Cooler', 'Refreshing crushed mint, fresh ripe mango puree, lime wedges, and sparkling soda', 650.00, 'dish_6adc56f3af037.jpeg', 1),
+(10, 2, 'Classic Roast Chicken Kottu', 'Wok-tossed Godamba flatbread shredded with tender spiced roast chicken, crisp cabbage, and egg', 1350.00, 'chees kottu.jpg', 1),
+(11, 1, 'String Hopper Biryani Special', 'Fine steamed idiyappam layered with chicken curry, saffron infused onions, and hard-boiled egg', 1450.00, 'Royal Chicken Dum Biryani.jpeg', 1),
+(12, 3, 'Dutch Mutton Lamprais', 'Authentic slow-baked banana leaf parcel packed with mutton frikkadels, seeni sambol, and ash plantain', 2650.00, 'Lamprais Special (Chicken).jpeg', 1),
+(13, 4, 'Jaffna Spicy Prawn Bites', 'Deep-fried jumbo prawns tossed in roasted Jaffna curry powder, curry leaves, and green chillies', 2150.00, 'sea food .jpeg', 1),
+(14, 4, 'Crispy Devilled Pork Belly', 'Twice-cooked succulent pork belly glazed in tamarind, tomato, and crushed black pepper sauce', 1850.00, 'devel chicken.jpg', 1),
+(15, 1, 'Vegetable Dum Biryani', 'Aromatic basmati rice cooked with garden peas, paneer cubes, cashews, raisins, and mint raita', 1200.00, 'Royal Chicken Dum Biryani.jpeg', 1),
+(16, 2, 'Spicy Vegetable Egg Kottu', 'Shredded godamba flatbread sautéed with fresh leeks, carrots, scrambled farm eggs, and chili sauce', 950.00, 'chees kottu.jpg', 1),
+(17, 3, 'Seafood Claypot Rice & Curry', 'Red samba rice served with fresh yellowfin tuna ambul thiyal, devilled prawns, and dhal curry', 1950.00, 'sea food .jpeg', 1),
+(18, 4, 'Sri Lankan Fish Cutlets (5 pcs)', 'Golden crumbed mackerel and spiced potato croquettes served with spicy sweet chili relish', 650.00, 'het butter .jpeg', 1),
+(19, 5, 'Royal Faluda with Vanilla Ice Cream', 'Fragrant rose syrup infused with chilled milk, basil seeds, grass jelly cubes, and rich vanilla ice cream', 750.00, 'dish_6adc56f3af037.jpeg', 1),
+(20, 5, 'Caramel Cream Pudding', 'Silky baked egg and condensed milk custard topped with dark golden caramel glaze', 600.00, 'Traditional Jaggery Watalappan.jpeg', 1),
+(21, 5, 'Tropical Woodapple Nectar', 'Traditional woodapple pulp blended with pure coconut milk and kithul treacle', 550.00, 'dish_6adc56f3af037.jpeg', 1),
+(22, 4, 'Batter Fried Crispy Mushrooms', 'Golden oyster mushrooms fried crisp and dusted with chili salt and toasted cumin', 850.00, 'het butter .jpeg', 1);
 
--- 8. INVENTORY (Component B baseline)
+-- 8. INVENTORY (Component B: >= 20 realistic rows)
 INSERT INTO inventory (id, dish_id, current_stock, reorder_level) VALUES
 (1, 1, 45, 10),
 (2, 2, 20, 5),
 (3, 3, 35, 10),
 (4, 4, 15, 5),
 (5, 5, 25, 8),
-(6, 6, 8, 10),  -- Low stock indicator test
-(7, 7, 0, 10),  -- Out of stock indicator test
-(8, 8, 50, 15);
+(6, 6, 8, 10),   -- Low stock indicator test
+(7, 7, 0, 10),   -- Out of stock indicator test
+(8, 8, 50, 15),
+(9, 9, 30, 8),
+(10, 10, 28, 8),
+(11, 11, 22, 6),
+(12, 12, 18, 5),
+(13, 13, 14, 5),
+(14, 14, 16, 5),
+(15, 15, 40, 10),
+(16, 16, 32, 8),
+(17, 17, 19, 6),
+(18, 18, 60, 15),
+(19, 19, 45, 10),
+(20, 20, 38, 8),
+(21, 21, 25, 6),
+(22, 22, 20, 5);
 
--- 9. STOCK MOVEMENTS (Component B baseline)
+-- 9. STOCK MOVEMENTS (Component B: >= 20 realistic historical movements)
 INSERT INTO stock_movements (id, dish_id, user_id, movement_type, quantity, reason, created_at) VALUES
-(1, 1, 3, 'RESTOCK', 50, 'Morning batch prepared', '2026-10-15 08:30:00'),
+(1, 1, 3, 'RESTOCK', 50, 'Morning kitchen batch prepared', '2026-10-15 08:30:00'),
 (2, 1, 3, 'ORDER_DEDUCT', 5, 'Deducted for orders #ORD-202610-001 to 003', '2026-10-15 12:45:00'),
-(3, 7, 4, 'WASTAGE', 5, 'Discarded due to prep standard rejection', '2026-10-15 18:00:00');
+(3, 7, 4, 'WASTAGE', 5, 'Discarded due to prep standard rejection', '2026-10-15 18:00:00'),
+(4, 2, 3, 'RESTOCK', 25, 'Imported Australian mutton batch prepped', '2026-10-16 09:00:00'),
+(5, 2, 3, 'ORDER_DEDUCT', 3, 'Deducted for weekend dinner orders', '2026-10-16 20:30:00'),
+(6, 3, 4, 'RESTOCK', 40, 'Fresh godamba roti batch chopped', '2026-10-17 11:00:00'),
+(7, 3, 4, 'ORDER_DEDUCT', 5, 'Order fulfillment checkout', '2026-10-17 13:15:00'),
+(8, 4, 3, 'RESTOCK', 20, 'Negombo seafood market fresh catch delivery', '2026-10-18 08:15:00'),
+(9, 4, 3, 'ORDER_DEDUCT', 4, 'Lunch rush seafood orders', '2026-10-18 13:00:00'),
+(10, 5, 4, 'RESTOCK', 30, 'Banana leaf lamprais parcel baking batch', '2026-10-19 09:30:00'),
+(11, 6, 3, 'RESTOCK', 25, 'Fresh cuttlefish cleaned and batter seasoned', '2026-10-20 10:00:00'),
+(12, 6, 3, 'ORDER_DEDUCT', 8, 'Corporate dinner order batch deduction', '2026-10-20 21:00:00'),
+(13, 8, 4, 'RESTOCK', 60, 'Traditional claypot jaggery watalappan steaming', '2026-10-21 07:45:00'),
+(14, 8, 4, 'ORDER_DEDUCT', 10, 'Dessert combo promotion checkout', '2026-10-21 14:20:00'),
+(15, 9, 3, 'RESTOCK', 35, 'Fresh mango crush and mint syrup prep', '2026-10-22 10:30:00'),
+(16, 10, 4, 'RESTOCK', 30, 'Roast chicken portion prep for kottu station', '2026-10-23 11:15:00'),
+(17, 12, 3, 'RESTOCK', 20, 'Dutch burgher recipe slow steam batch', '2026-10-24 09:00:00'),
+(18, 13, 4, 'WASTAGE', 2, 'Spicy prawns discarded due to shell defect', '2026-10-24 16:30:00'),
+(19, 15, 3, 'RESTOCK', 45, 'Fresh vegetable and paneer biryani pot', '2026-10-25 08:00:00'),
+(20, 18, 4, 'RESTOCK', 70, 'Mackerel fish cutlet crumb prep and blast freeze', '2026-10-25 15:00:00');
 
 -- 10. COUPONS (Component C baseline & test coupons)
 INSERT INTO coupons (id, code, discount_type, discount_value, min_order_value, usage_limit, times_used, expires_at, is_active) VALUES
