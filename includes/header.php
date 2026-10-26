@@ -23,6 +23,7 @@ $currentUser = current_user();
     <meta name="description" content="UrbanEats - Colombo's premier multi-cuisine cloud kitchen delivering authentic Sri Lankan, Biryani, and Street Food.">
     <!-- Master Shared Stylesheet -->
     <link rel="stylesheet" href="<?= asset('css/style.css') ?>">
+    <link rel="stylesheet" href="<?= asset('css/orders.css') ?>">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍛</text></svg>">
 </head>
 <body>

@@ -6,8 +6,9 @@
  * Implements login throttling (5 failed attempts lock), password_verify(),
  * session hardening, CSRF verification, and role-based post-login routing.
  */
-
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 // If already authenticated, redirect to appropriate destination
 if (is_logged_in()) {
@@ -72,6 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$pageTitle = 'Sign In - ' . APP_NAME;
+require_once __DIR__ . '/../includes/header.php';
 ?>
 
 <div class="container">
