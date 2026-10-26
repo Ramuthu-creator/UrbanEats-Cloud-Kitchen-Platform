@@ -130,7 +130,7 @@ require_once __DIR__ . '/../includes/header.php';
 
                 <div style="background: var(--bg-card); padding: 1.25rem; border-radius: var(--radius-md); border-left: 4px solid var(--info);">
                     <strong style="color: #93C5FD;">Component C (Student 3)</strong>
-                    <div style="font-size: 0.8rem; color: var(--warning); font-weight: 600; margin-top: 0.25rem;">Status: Space Reserved for Teammate</div>
+                    <div style="font-size: 0.8rem; color: var(--success); font-weight: 600; margin-top: 0.25rem;">Status: 100% Complete & Integrated</div>
                     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">
                         Shopping Cart, Checkout Transaction, Order Status Workflow, Kitchen Queue, Sales Reports.
                     </p>

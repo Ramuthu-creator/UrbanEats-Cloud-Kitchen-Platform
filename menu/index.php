@@ -45,15 +45,20 @@ $total_pages = ceil($total_dishes / $limit);
 $allowed_sorts = [
     'name_asc' => 'd.name ASC', 
     'price_asc' => 'd.price ASC', 
-    'price_desc' => 'd.price DESC'
+    'price_desc' => 'd.price DESC',
+    'rating_desc' => 'avg_rating DESC, d.name ASC'
 ];
 $sort_query = $allowed_sorts[$sort] ?? 'd.name ASC';
 
-// 6. Final Data Query with Limit and Offset
-$sql = "SELECT d.*, c.name as category_name 
+// 6. Final Data Query with Limit and Offset (Including Customer Ratings)
+$sql = "SELECT d.*, c.name as category_name,
+               COALESCE(AVG(r.rating), 0) AS avg_rating,
+               COUNT(r.id) AS review_count
         FROM dishes d 
         JOIN categories c ON d.category_id = c.id 
+        LEFT JOIN reviews r ON d.id = r.dish_id
         $where_sql 
+        GROUP BY d.id
         ORDER BY $sort_query 
         LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
 
@@ -124,6 +129,7 @@ function build_url($new_page, $search, $category_id, $sort) {
             <option value="name_asc" <?= $sort == 'name_asc' ? 'selected' : '' ?>>Name (A-Z)</option>
             <option value="price_asc" <?= $sort == 'price_asc' ? 'selected' : '' ?>>Price (Low to High)</option>
             <option value="price_desc" <?= $sort == 'price_desc' ? 'selected' : '' ?>>Price (High to Low)</option>
+            <option value="rating_desc" <?= $sort == 'rating_desc' ? 'selected' : '' ?>>Top Rated ⭐</option>
         </select>
         <button type="submit" class="btn-search">Search</button>
         <a href="index.php" class="btn-clear">Clear</a>
@@ -143,6 +149,20 @@ function build_url($new_page, $search, $category_id, $sort) {
                     <div class="dish-info">
                         <h3 class="dish-name"><?= htmlspecialchars($dish['name']) ?></h3>
                         <p class="dish-cat"><?= htmlspecialchars($dish['category_name']) ?></p>
+                        
+                        <!-- Customer Rating Display (පාරිභෝගික ඇගයීම්) -->
+                        <div class="dish-rating" style="display: flex; align-items: center; justify-content: center; gap: 5px; margin: 4px 0 10px;">
+                            <?php if (!empty($dish['review_count']) && (int)$dish['review_count'] > 0): ?>
+                                <span style="color: #f59e0b; font-size: 0.95rem; letter-spacing: 1px;">
+                                    <?= str_repeat('★', (int)round($dish['avg_rating'])) . str_repeat('☆', 5 - (int)round($dish['avg_rating'])) ?>
+                                </span>
+                                <span style="font-weight: 700; color: #fff; font-size: 0.85rem;"><?= number_format($dish['avg_rating'], 1) ?></span>
+                                <span style="color: #94a3b8; font-size: 0.78rem;">(<?= (int)$dish['review_count'] ?>)</span>
+                            <?php else: ?>
+                                <span style="color: #64748b; font-size: 0.78rem;">⭐ New &bull; No ratings yet</span>
+                            <?php endif; ?>
+                        </div>
+
                         <p class="dish-price">LKR <?= number_format($dish['price'], 2) ?></p>
                         <a href="detail.php?id=<?= $dish['id'] ?>" class="btn-view">View Details</a>
                     </div>

@@ -194,6 +194,20 @@ try {
                 FOREIGN KEY (order_id) REFERENCES orders (id),
                 FOREIGN KEY (changed_by_user_id) REFERENCES users (id)
             );
+            CREATE TABLE IF NOT EXISTS reviews (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                order_id INTEGER NOT NULL,
+                dish_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                rating INTEGER NOT NULL,
+                comment TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (order_id) REFERENCES orders (id),
+                FOREIGN KEY (dish_id) REFERENCES dishes (id),
+                FOREIGN KEY (user_id) REFERENCES users (id),
+                UNIQUE(order_id, dish_id, user_id)
+            );
         ");
 
         // Seed default roles if empty

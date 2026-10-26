@@ -51,19 +51,28 @@ $currentUser = current_user();
                         <a href="<?= base_url('menu/index.php') ?>">Menu</a>
                     </li>
 
-                    <?php if ($currentRole === 'customer'): ?>
+                    <?php if ($currentRole === 'customer' || empty($currentRole)): ?>
                         <li class="nav-item">
-                            <a href="<?= base_url('orders/cart.php') ?>">Cart 🛒</a>
+                            <a href="<?= base_url('orders/cart.php') ?>">
+                                Cart 🛒
+                                <?php if (!empty($_SESSION['cart']) && array_sum($_SESSION['cart']) > 0): ?>
+                                    <span class="badge badge-primary" style="font-size: 0.7rem; padding: 0.15rem 0.45rem; border-radius: 999px;"><?= array_sum($_SESSION['cart']) ?></span>
+                                <?php endif; ?>
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('orders/history.php') ?>">My Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('orders/track.php') ?>">Track Order</a>
-                        </li>
+                        <?php if ($currentRole === 'customer'): ?>
+                            <li class="nav-item">
+                                <a href="<?= base_url('orders/history.php') ?>">My Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= base_url('orders/track.php') ?>">Track Order</a>
+                            </li>
+                        <?php endif; ?>
 
                     <?php elseif ($currentRole === 'staff'): ?>
-                        
+                        <li class="nav-item">
+                            <a href="<?= base_url('orders/kitchen_queue.php') ?>">Kitchen Queue 🍳</a>
+                        </li>
                         <li class="nav-item">
                             <a href="<?= base_url('menu/manage.php') ?>">Manage Dishes</a>
                         </li>
@@ -74,6 +83,9 @@ $currentUser = current_user();
                     <?php elseif ($currentRole === 'admin'): ?>
                         <li class="nav-item">
                             <a href="<?= base_url('admin/dashboard.php') ?>">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= base_url('orders/kitchen_queue.php') ?>">Kitchen Queue 🍳</a>
                         </li>
                         <li class="nav-item">
                             <a href="<?= base_url('admin/users.php') ?>">Users</a>
