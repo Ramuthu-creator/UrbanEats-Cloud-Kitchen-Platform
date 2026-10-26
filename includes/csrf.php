@@ -49,6 +49,13 @@ function verify_csrf_token(?string $token = null): bool {
 }
 
 /**
+ * Backward compatibility alias for verify_csrf_token
+ */
+function verify_csrf(?string $token = null): bool {
+    return verify_csrf_token($token);
+}
+
+/**
  * Validates CSRF token on POST requests; halts execution with a flash error if invalid
  */
 function validate_csrf_or_abort(): void {

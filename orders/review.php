@@ -26,7 +26,7 @@ if (!$pdo->query("SELECT 1 FROM information_schema.tables WHERE table_schema = D
 
 // 1. Process Review Form Submission (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'submit_review') {
-    if (!verify_csrf()) {
+    if (!verify_csrf_token()) {
         set_flash('error', 'Security token expired. Please try again.');
         redirect('orders/review.php' . (!empty($_POST['order_id']) ? '?order_id=' . (int)$_POST['order_id'] : ''));
     }
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'submi
             $pdo->prepare("INSERT INTO reviews (order_id, dish_id, user_id, rating, comment) VALUES (?, ?, ?, ?, ?)")->execute([$orderId, $dishId, $userId, $rating, $comment ?: null]);
             set_flash('success', "Thank you! Submitted your {$rating}-star review for " . e($dishName) . ".");
         }
-        if (function_exists('audit_log')) audit_log('REVIEW_SUBMITTED', "User {$userId} rated dish {$dishId} ({$rating} stars)");
+        if (function_exists('log_action')) log_action('REVIEW_SUBMITTED', "User {$userId} rated dish {$dishId} ({$rating} stars)", $userId);
     }
     redirect("orders/review.php?order_id={$orderId}");
 }
