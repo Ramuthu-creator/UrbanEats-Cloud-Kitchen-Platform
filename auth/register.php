@@ -6,8 +6,9 @@
  * Implements server-side validation, password hashing with password_hash(),
  * unique email constraint checking, CSRF protection, and audit logging.
  */
-
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 // If already logged in, redirect
 if (is_logged_in()) {
@@ -130,6 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$pageTitle = 'Create Account - ' . APP_NAME;
+require_once __DIR__ . '/../includes/header.php';
 ?>
 
 <div class="container">

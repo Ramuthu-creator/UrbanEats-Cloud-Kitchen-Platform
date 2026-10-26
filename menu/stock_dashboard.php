@@ -15,20 +15,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $user_id = 1; // predict 1 user log 
 
     if ($dish_id && $quantity > 0 && !empty($reason)) {
-        // Wastage as Negative
+        // Wastage as Negative for inventory balance
         $qty_change = ($adj_type === 'wastage') ? -$quantity : $quantity;
+        $movement_type = ($adj_type === 'wastage') ? 'WASTAGE' : 'RESTOCK';
 
         try {
             // Transaction-safe
             $pdo->beginTransaction();
 
-            // Inventory Update
-            $stmt_inv = $pdo->prepare("UPDATE inventory SET quantity = quantity + ? WHERE dish_id = ?");
+            // Inventory Update (column name is current_stock)
+            $stmt_inv = $pdo->prepare("UPDATE inventory SET current_stock = GREATEST(0, current_stock + ?) WHERE dish_id = ?");
             $stmt_inv->execute([$qty_change, $dish_id]);
 
             // Stock Movement Log
-            $stmt_log = $pdo->prepare("INSERT INTO stock_movements (dish_id, user_id, quantity_change, reason) VALUES (?, ?, ?, ?)");
-            $stmt_log->execute([$dish_id, $user_id, $qty_change, $reason]);
+            $stmt_log = $pdo->prepare("INSERT INTO stock_movements (dish_id, user_id, movement_type, quantity, reason) VALUES (?, ?, ?, ?, ?)");
+            $stmt_log->execute([$dish_id, $user_id, $movement_type, $quantity, $reason]);
 
             $pdo->commit();
             $message = "<div class='alert alert-success'>Stock updated successfully!</div>";
@@ -42,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // 2. Fetch Dashboard Data (JOIN dishes with inventory)
-$sql = "SELECT d.id as dish_id, d.name, i.quantity, i.reorder_level 
+$sql = "SELECT d.id as dish_id, d.name, COALESCE(i.current_stock, 0) AS quantity, i.reorder_level 
         FROM dishes d 
         LEFT JOIN inventory i ON d.id = i.dish_id 
         WHERE d.is_active = 1 
-        ORDER BY i.quantity ASC"; // create ASC order to show low stock items at the top
+        ORDER BY i.current_stock ASC"; // show low stock items at the top
 $dishes = $pdo->query($sql)->fetchAll();
 ?>
 
