@@ -13,6 +13,7 @@ CREATE DATABASE IF NOT EXISTS `urbaneats_db` CHARACTER SET utf8mb4 COLLATE utf8m
 USE `urbaneats_db`;
 
 SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS order_status_history;
 DROP TABLE IF EXISTS payments;
 DROP TABLE IF EXISTS order_items;
@@ -239,6 +240,25 @@ CREATE TABLE order_status_history (
     CONSTRAINT fk_osh_order FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_osh_user FOREIGN KEY (changed_by_user_id) REFERENCES users (id) ON DELETE SET NULL ON UPDATE CASCADE,
     INDEX idx_osh_order (order_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Table: reviews
+-- Customer Ratings & Reviews (1 to 5 Stars + Comments for ordered dishes)
+CREATE TABLE reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    dish_id INT NOT NULL,
+    user_id INT NOT NULL,
+    rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_reviews_order FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_reviews_dish FOREIGN KEY (dish_id) REFERENCES dishes (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE KEY uq_order_dish_user (order_id, dish_id, user_id),
+    INDEX idx_reviews_dish (dish_id),
+    INDEX idx_reviews_user (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ====================================================================

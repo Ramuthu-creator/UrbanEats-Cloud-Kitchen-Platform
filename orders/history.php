@@ -238,6 +238,12 @@ require_once __DIR__ . '/../includes/header.php';
                                            class="btn btn-secondary btn-sm" style="padding: 0.35rem 0.65rem; font-size: 0.8rem;">
                                             📄 Invoice
                                         </a>
+                                        <?php if ($ord['status'] === 'COMPLETED'): ?>
+                                            <a href="<?= base_url('orders/review.php?order_id=' . (int)$ord['id']) ?>" 
+                                               class="btn btn-warning btn-sm" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #f39c12; color: #1e1e24; font-weight: 700; border: none;">
+                                                ⭐ Rate Food
+                                            </a>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
