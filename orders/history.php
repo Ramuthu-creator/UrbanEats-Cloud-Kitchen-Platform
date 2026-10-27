@@ -51,7 +51,7 @@ require_once __DIR__ . '/../includes/header.php';
     <div
         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
         <div>
-            <span class="badge badge-customer">Component C &bull; Customer Portal</span>
+            <span class="badge badge-customer">Customer Portal &bull; Dining History</span>
             <h1 style="margin: 0.3rem 0; font-size: 2.2rem;">My Order History</h1>
             <p style="margin: 0; color: var(--text-muted);">Track ongoing food preparations and review past dining
                 invoices.</p>
@@ -184,7 +184,7 @@ require_once __DIR__ . '/../includes/header.php';
                                         <?php if ($ord['status'] === 'COMPLETED'): ?>
                                             <a href="<?= base_url('orders/review.php?order_id=' . (int) $ord['id']) ?>"
                                                 class="btn btn-sm"
-                                                style="font-size: 0.8rem; background: #f39c12; color: #1e1e24; font-weight: 700;">⭐
+                                                style="font-size: 0.8rem; background: var(--primary); color: #070B0A; font-weight: 700;">⭐
                                                 Rate Food</a>
                                         <?php endif; ?>
                                     </div>

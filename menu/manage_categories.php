@@ -109,22 +109,22 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name ASC")->fetchAl
 
 <!-- Dark Theme CSS -->
 <style>
-    .manage-wrapper { max-width: 800px; margin: 40px auto; padding: 20px; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .page-title { color: #f39c12; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;}
+    .manage-wrapper { max-width: 800px; margin: 40px auto; padding: 20px; color: var(--text-primary); font-family: var(--font-body); }
+    .page-title { color: var(--primary); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-heading); }
     
-    .form-card { background: #1e1e24; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); margin-bottom: 40px; border: 1px solid #333;}
+    .form-card { background: var(--bg-surface); padding: 30px; border-radius: var(--radius-md); box-shadow: var(--shadow-md); margin-bottom: 40px; border: 1px solid var(--border-color);}
     .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; margin-bottom: 8px; color: #ccc; font-weight: bold;}
-    .form-control { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #444; background: #2a2a35; color: #fff; box-sizing: border-box; }
-    .form-control:focus { outline: none; border-color: #f39c12; }
+    .form-group label { display: block; margin-bottom: 8px; color: var(--text-secondary); font-weight: bold;}
+    .form-control { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); box-sizing: border-box; }
+    .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
     
-    .btn-submit { background: #f39c12; color: #fff; border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; font-size: 1.1rem;}
-    .btn-submit:hover { background: #e67e22; }
+    .btn-submit { background: var(--primary); color: #070B0A; border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; font-size: 1.1rem;}
+    .btn-submit:hover { background: var(--primary-hover); }
 
-    .table-dark { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e1e24; border-radius: 10px; overflow: hidden;}
-    .table-dark th, .table-dark td { padding: 15px; text-align: left; border-bottom: 1px solid #333; }
-    .table-dark th { background: #2a2a35; color: #f39c12; }
-    .table-dark tr:hover { background: #2a2a35; }
+    .table-dark { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--bg-surface); border-radius: 10px; overflow: hidden;}
+    .table-dark th, .table-dark td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
+    .table-dark th { background: var(--bg-card); color: var(--primary); }
+    .table-dark tr:hover { background: var(--bg-card-hover); }
     
     .btn-edit { display: inline-block; padding: 6px 12px; background: #3498db; color: #fff; text-decoration: none; border-radius: 4px; font-size: 0.9rem; font-weight: bold;}
     .btn-edit:hover { background: #2980b9; }

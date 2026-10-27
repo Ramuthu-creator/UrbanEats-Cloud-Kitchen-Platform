@@ -189,37 +189,37 @@ $dishes = $pdo->query("
 
 <!-- Dark Theme CSS -->
 <style>
-    .manage-wrapper { max-width: 1100px; margin: 40px auto; padding: 20px; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .page-title { color: #f39c12; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
+    .manage-wrapper { max-width: 1100px; margin: 40px auto; padding: 20px; color: var(--text-primary); font-family: var(--font-body); }
+    .page-title { color: var(--primary); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-family: var(--font-heading); }
     
-    .form-card { background: #1e1e24; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); margin-bottom: 40px; border: 1px solid #333;}
+    .form-card { background: var(--bg-surface); padding: 30px; border-radius: var(--radius-md); box-shadow: var(--shadow-md); margin-bottom: 40px; border: 1px solid var(--border-color); }
     .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; margin-bottom: 8px; color: #ccc; font-weight: bold;}
-    .form-control { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #444; background: #2a2a35; color: #fff; box-sizing: border-box; }
-    .form-control:focus { outline: none; border-color: #f39c12; }
+    .form-group label { display: block; margin-bottom: 8px; color: var(--text-secondary); font-weight: bold;}
+    .form-control { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); box-sizing: border-box; }
+    .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
     
-    .btn-submit { background: #f39c12; color: #fff; border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; font-size: 1.1rem;}
-    .btn-submit:hover { background: #e67e22; }
+    .btn-submit { background: var(--primary); color: #070B0A; border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; font-size: 1.1rem;}
+    .btn-submit:hover { background: var(--primary-hover); }
 
-    .table-dark { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e1e24; border-radius: 10px; overflow: hidden;}
-    .table-dark th, .table-dark td { padding: 14px; text-align: left; border-bottom: 1px solid #333; vertical-align: middle;}
-    .table-dark th { background: #2a2a35; color: #f39c12; }
-    .table-dark tr:hover { background: #2a2a35; }
+    .table-dark { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--bg-surface); border-radius: 10px; overflow: hidden;}
+    .table-dark th, .table-dark td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle;}
+    .table-dark th { background: var(--bg-card); color: var(--primary); }
+    .table-dark tr:hover { background: var(--bg-card-hover); }
     
     .alert { padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; }
-    .alert-success { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
-    .alert-danger { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+    .alert-success { background: rgba(0, 201, 136, 0.2); color: var(--primary); border: 1px solid var(--primary); }
+    .alert-danger { background: rgba(244, 63, 94, 0.2); color: #F43F5E; border: 1px solid #F43F5E; }
 
-    .badge-active { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
-    .badge-inactive { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+    .badge-active { background: rgba(0, 201, 136, 0.2); color: var(--primary); border: 1px solid var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+    .badge-inactive { background: rgba(244, 63, 94, 0.2); color: #F43F5E; border: 1px solid #F43F5E; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
 </style>
 
 <div class="manage-wrapper">
     <div class="page-title">
         <h1 style="margin: 0;">⚙️ Staff: Manage Dishes & Catalogue</h1>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <a href="manage_categories.php" class="btn btn-secondary btn-sm" style="background: #3498db; color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 4px; font-weight: bold;">📁 Category Management</a>
-            <a href="stock_dashboard.php" class="btn btn-primary btn-sm" style="background: #e67e22; color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 4px; font-weight: bold;">📦 Stock Control</a>
+            <a href="manage_categories.php" class="btn btn-secondary btn-sm" style="background: var(--bg-card); color: var(--text-primary); text-decoration: none; padding: 8px 14px; border-radius: 4px; font-weight: bold; border: 1px solid var(--border-color);">📁 Category Management</a>
+            <a href="stock_dashboard.php" class="btn btn-primary btn-sm" style="text-decoration: none; padding: 8px 14px; border-radius: 4px; font-weight: bold;">📦 Stock Control</a>
         </div>
     </div>
     
@@ -227,7 +227,7 @@ $dishes = $pdo->query("
 
     <!-- Add / Edit Dish Form -->
     <div class="form-card">
-        <h3 style="margin-top: 0; color: #f39c12;"><?= $edit_dish ? '✏️ Edit Dish #' . $edit_dish['id'] : '➕ Add New Dish to Menu' ?></h3>
+        <h3 style="margin-top: 0; color: var(--primary);"><?= $edit_dish ? '✏️ Edit Dish #' . $edit_dish['id'] : '➕ Add New Dish to Menu' ?></h3>
         <form method="POST" action="manage.php" enctype="multipart/form-data">
             <?= csrf_input() ?>
             <input type="hidden" name="action" value="<?= $edit_dish ? 'edit' : 'add' ?>">
@@ -324,7 +324,7 @@ $dishes = $pdo->query("
                 <td><?= htmlspecialchars($dish['category_name']) ?></td>
                 <td style="font-weight: bold; color: #2ecc71;">Rs. <?= number_format($dish['price'], 2) ?></td>
                 <td>
-                    <span style="font-weight: bold; color: <?= (int)$dish['current_stock'] > 5 ? '#2ecc71' : ((int)$dish['current_stock'] > 0 ? '#f39c12' : '#e74c3c') ?>;">
+                    <span style="font-weight: bold; color: <?= (int)$dish['current_stock'] > 5 ? 'var(--primary)' : ((int)$dish['current_stock'] > 0 ? 'var(--accent)' : 'var(--error)') ?>;">
                         <?= (int)$dish['current_stock'] ?>
                     </span>
                 </td>

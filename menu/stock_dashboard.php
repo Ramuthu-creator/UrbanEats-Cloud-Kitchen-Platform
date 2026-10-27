@@ -84,25 +84,25 @@ $dishes = $pdo->query($sql)->fetchAll();
 ?>
 
 <style>
-    .dashboard-wrapper { max-width: 1100px; margin: 40px auto; padding: 20px; color: #fff; font-family: sans-serif; }
-    .page-title { color: #f39c12; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 30px; }
+    .dashboard-wrapper { max-width: 1100px; margin: 40px auto; padding: 20px; color: var(--text-primary); font-family: var(--font-body); }
+    .page-title { color: var(--primary); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 30px; font-family: var(--font-heading); }
     
-    .panel-box { background: #1e1e24; padding: 25px; border-radius: 10px; border: 1px solid #333; margin-bottom: 30px;}
+    .panel-box { background: var(--bg-surface); padding: 25px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 30px; box-shadow: var(--shadow-md);}
     .form-row { display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;}
     .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column;}
-    .form-group label { margin-bottom: 8px; color: #ccc; font-weight: bold;}
-    .form-control { padding: 10px; border-radius: 6px; border: 1px solid #444; background: #2a2a35; color: #fff; }
-    .btn-submit { padding: 10px 20px; background: #3498db; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s;}
-    .btn-submit:hover { background: #2980b9; }
+    .form-group label { margin-bottom: 8px; color: var(--text-secondary); font-weight: bold;}
+    .form-control { padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); }
+    .btn-submit { padding: 10px 20px; background: var(--primary); color: #070B0A; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s;}
+    .btn-submit:hover { background: var(--primary-hover); }
 
-    .table-dark { width: 100%; border-collapse: collapse; background: #1e1e24; border-radius: 10px; overflow: hidden;}
-    .table-dark th, .table-dark td { padding: 15px; text-align: left; border-bottom: 1px solid #333; }
-    .table-dark th { background: #2a2a35; color: #f39c12; }
+    .table-dark { width: 100%; border-collapse: collapse; background: var(--bg-surface); border-radius: var(--radius-md); overflow: hidden;}
+    .table-dark th, .table-dark td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
+    .table-dark th { background: var(--bg-card); color: var(--primary); }
     
     .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
-    .badge-good { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
-    .badge-low { background: rgba(243, 156, 18, 0.2); color: #f39c12; border: 1px solid #f39c12; }
-    .badge-out { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+    .badge-good { background: rgba(0, 201, 136, 0.2); color: var(--primary); border: 1px solid var(--primary); }
+    .badge-low { background: rgba(6, 182, 212, 0.2); color: var(--accent); border: 1px solid var(--accent); }
+    .badge-out { background: rgba(244, 63, 94, 0.2); color: #F43F5E; border: 1px solid #F43F5E; }
     
     .alert { padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; }
     .alert-success { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }

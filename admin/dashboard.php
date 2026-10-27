@@ -105,7 +105,7 @@ try {
         <div class="card-header">
             <div>
                 <h2 class="card-title">Quick Administration Actions</h2>
-                <p class="card-subtitle">Direct shortcuts to system modules across all components</p>
+                <p class="card-subtitle">Direct shortcuts to platform governance and kitchen modules</p>
             </div>
         </div>
 
@@ -124,13 +124,13 @@ try {
 
             <a href="<?= base_url('admin/reports.php') ?>" class="card" style="background: var(--bg-card); padding: 1.25rem; display: block; border-color: rgba(255,255,255,0.05);">
                 <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📊 Sales & Revenue Reports</div>
-                <p style="font-size: 0.85rem; margin-bottom: 0.5rem;">Component C Module: Daily/monthly sales, order stage metrics, and top-selling dishes.</p>
+                <p style="font-size: 0.85rem; margin-bottom: 0.5rem;">Financial intelligence: Daily/monthly sales, order stage metrics, and top-selling dishes.</p>
                 <span style="font-size: 0.825rem; color: var(--primary); font-weight: 600;">View sales reports &rarr;</span>
             </a>
 
             <a href="<?= base_url('menu/manage.php') ?>" class="card" style="background: var(--bg-card); padding: 1.25rem; display: block; border-color: rgba(255,255,255,0.05);">
                 <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🍲 Dishes & Catalogue</div>
-                <p style="font-size: 0.85rem; margin-bottom: 0.5rem;">Component B Module: Browse dishes, adjust pricing, images, categories, and stock.</p>
+                <p style="font-size: 0.85rem; margin-bottom: 0.5rem;">Menu operations: Browse dishes, adjust pricing, images, categories, and stock.</p>
                 <span style="font-size: 0.825rem; color: var(--primary); font-weight: 600;">Review catalogue &rarr;</span>
             </a>
         </div>

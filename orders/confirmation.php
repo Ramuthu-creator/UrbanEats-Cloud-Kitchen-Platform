@@ -75,7 +75,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
             <div>
                 <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.4rem;">
-                    <span style="font-size: 2rem;">🍛</span>
+                    <span style="font-size: 2rem;">🍽️</span>
                     <div>
                         <h1 style="font-size: 1.75rem; margin: 0; line-height: 1;">Urban<span style="color: var(--primary);">Eats</span></h1>
                         <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Cloud Kitchens Colombo</span>
@@ -112,7 +112,7 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
 
         <?php if (!empty($order['notes'])): ?>
-            <div style="background: rgba(245, 158, 11, 0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.85rem;">
+            <div style="background: rgba(0, 201, 136, 0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.85rem;">
                 <strong>Special Instructions:</strong> <?= e($order['notes']) ?>
             </div>
         <?php endif; ?>

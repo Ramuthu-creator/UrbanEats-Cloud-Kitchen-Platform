@@ -98,7 +98,7 @@ require_once __DIR__ . '/../includes/header.php';
 <div class="container" style="max-width: 1200px; margin-top: 1rem; margin-bottom: 3rem;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
         <div>
-            <span class="badge badge-staff">Component C &bull; Workflow Engine</span>
+            <span class="badge badge-staff">Kitchen Operations &bull; Live KDS</span>
             <h1 style="margin: 0.3rem 0; font-size: 2.2rem;">Kitchen Dispatch Queue 🍳</h1>
             <p style="color:var(--text-muted); margin:0;">Live finite state machine workflow for kitchen preparation and dispatch.</p>
         </div>

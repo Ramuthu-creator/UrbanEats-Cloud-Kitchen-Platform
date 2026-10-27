@@ -78,37 +78,38 @@ function build_url($new_page, $search, $category_id, $sort) {
 }
 ?>
 
-<!-- Custom CSS for Component B (Dark Theme) -->
+<!-- Custom CSS for Menu Grid -->
 <style>
-    .menu-wrapper { max-width: 1200px; margin: 0 auto; padding: 40px 20px; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .menu-title { text-align: center; color: #f39c12; font-size: 2.5rem; margin-bottom: 30px; font-weight: bold; }
+    .menu-wrapper { max-width: 1200px; margin: 0 auto; padding: 40px 20px; color: var(--text-primary); font-family: var(--font-body); }
+    .menu-title { text-align: center; color: var(--primary); font-size: 2.5rem; margin-bottom: 30px; font-weight: 800; font-family: var(--font-heading); }
     
-    .filter-bar { display: flex; gap: 15px; flex-wrap: wrap; background: #1e1e24; padding: 20px; border-radius: 10px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); justify-content: center; align-items: center; border: 1px solid #333;}
-    .filter-bar input, .filter-bar select { padding: 10px 15px; border-radius: 6px; border: 1px solid #444; background: #2a2a35; color: #fff; outline: none; font-size: 1rem; min-width: 200px;}
-    .btn-search { padding: 10px 20px; background: #f39c12; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 1rem; }
-    .btn-search:hover { background: #e67e22; }
-    .btn-clear { padding: 10px 20px; background: #555; color: #fff; text-decoration: none; border-radius: 6px; transition: 0.3s; font-weight: bold; }
-    .btn-clear:hover { background: #777; }
+    .filter-bar { display: flex; gap: 15px; flex-wrap: wrap; background: var(--bg-surface); padding: 20px; border-radius: var(--radius-md); margin-bottom: 40px; box-shadow: var(--shadow-md); justify-content: center; align-items: center; border: 1px solid var(--border-color); }
+    .filter-bar input, .filter-bar select { padding: 10px 15px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); outline: none; font-size: 1rem; min-width: 200px; transition: var(--transition); }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .btn-search { padding: 10px 20px; background: var(--primary); color: #070B0A; border: none; border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; transition: var(--transition); font-size: 1rem; }
+    .btn-search:hover { background: var(--primary-hover); }
+    .btn-clear { padding: 10px 20px; background: var(--bg-card-hover); color: var(--text-primary); text-decoration: none; border-radius: var(--radius-sm); transition: var(--transition); font-weight: 600; border: 1px solid var(--border-color); }
+    .btn-clear:hover { background: rgba(255, 255, 255, 0.1); }
 
-    .dish-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; margin-bottom: 40px; }
-    .dish-card { background: #2a2a35; border-radius: 12px; overflow: hidden; text-align: center; transition: all 0.3s ease; border: 1px solid #333; display: flex; flex-direction: column;}
-    .dish-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(243, 156, 18, 0.15); border-color: #f39c12; }
+    .dish-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; margin-bottom: 40px; }
+    .dish-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; text-align: center; transition: var(--transition); border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+    .dish-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(255, 255, 255, 0.2); }
     
-    .dish-img { width: 100%; height: 200px; object-fit: cover; background: #1a1a20; }
+    .dish-img { width: 100%; height: 200px; object-fit: cover; background: var(--bg-surface); }
     .dish-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
-    .dish-name { margin: 0 0 5px; font-size: 1.3rem; color: #fff; font-weight: bold; }
-    .dish-cat { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-    .dish-price { font-size: 1.5rem; color: #f39c12; font-weight: bold; margin-bottom: 15px; margin-top: auto;}
+    .dish-name { margin: 0 0 5px; font-size: 1.2rem; color: var(--text-primary); font-weight: 700; font-family: var(--font-heading); }
+    .dish-cat { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; font-weight: 600; }
+    .dish-price { font-size: 1.35rem; color: var(--primary); font-weight: 700; margin-bottom: 15px; margin-top: auto; font-family: var(--font-heading); }
     
-    .btn-view { display: inline-block; padding: 8px 20px; background: transparent; border: 2px solid #f39c12; color: #f39c12; text-decoration: none; border-radius: 20px; transition: 0.3s; font-weight: bold; font-size: 0.9rem;}
-    .btn-view:hover { background: #f39c12; color: #fff; }
+    .btn-view { display: inline-block; padding: 7px 18px; background: transparent; border: 1px solid var(--primary); color: var(--primary); text-decoration: none; border-radius: var(--radius-sm); transition: var(--transition); font-weight: 600; font-size: 0.875rem; }
+    .btn-view:hover { background: var(--primary); color: #070B0A; }
 
     /* Pagination CSS */
-    .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 30px; flex-wrap: wrap;}
-    .page-link { padding: 10px 15px; background: #2a2a35; color: #fff; text-decoration: none; border-radius: 6px; border: 1px solid #444; transition: 0.3s; font-weight: bold;}
-    .page-link:hover { background: #f39c12; border-color: #f39c12; }
-    .page-link.active { background: #f39c12; border-color: #f39c12; cursor: default; }
-    .page-link.disabled { background: #1a1a20; color: #555; border-color: #333; cursor: not-allowed; }
+    .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 30px; flex-wrap: wrap; }
+    .page-link { padding: 10px 15px; background: var(--bg-card); color: var(--text-primary); text-decoration: none; border-radius: var(--radius-sm); border: 1px solid var(--border-color); transition: var(--transition); font-weight: bold; }
+    .page-link:hover { background: var(--primary); border-color: var(--primary); color: #070B0A; }
+    .page-link.active { background: var(--primary); border-color: var(--primary); color: #070B0A; cursor: default; }
+    .page-link.disabled { background: var(--bg-surface); color: var(--text-muted); border-color: var(--border-color); cursor: not-allowed; }
 </style>
 
 <div class="menu-wrapper">

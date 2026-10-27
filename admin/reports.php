@@ -176,7 +176,7 @@ require_once __DIR__ . '/../includes/header.php';
     <!-- Page Header -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <div>
-            <span class="badge badge-admin">Component C &bull; Analytics Engine</span>
+            <span class="badge badge-admin">Business Intelligence &bull; Financial Analytics</span>
             <h1 style="margin-top: 0.4rem; font-size: 2.2rem;">Sales & Revenue Reports</h1>
             <p style="margin-bottom: 0;">Comprehensive business intelligence, order lifecycle metrics, and dish sales ranking.</p>
         </div>
@@ -235,7 +235,7 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
 
     <!-- Active Report Period Banner -->
-    <div style="background: rgba(245, 158, 11, 0.08); border-left: 4px solid var(--primary); padding: 0.85rem 1.25rem; border-radius: 4px; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+    <div style="background: rgba(0, 201, 136, 0.08); border-left: 4px solid var(--primary); padding: 0.85rem 1.25rem; border-radius: 4px; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
         <div>
             Reporting Period: <strong><?= date('d M Y', strtotime($startDate)) ?></strong> &mdash; <strong><?= date('d M Y', strtotime($endDate)) ?></strong>
             <?php if ($orderTypeFilter !== 'ALL'): ?>

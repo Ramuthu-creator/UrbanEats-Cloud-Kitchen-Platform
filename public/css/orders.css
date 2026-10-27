@@ -1,5 +1,5 @@
 /* ====================================================================
-   UrbanEats Cloud Kitchen Platform - Component C (Orders) Stylesheet
+   UrbanEats Cloud Kitchen Platform - Orders & Fulfillment Stylesheet
    Dedicated styles for Cart, Checkout, Tracking, Kitchen & Reviews
    ==================================================================== */
 
@@ -8,24 +8,24 @@
 .star-rating-group input { display: none; }
 .star-rating-group label { font-size: 1.8rem; color: #4b5563; cursor: pointer; transition: color 0.2s, transform 0.15s; }
 .star-rating-group label:hover, .star-rating-group label:hover ~ label,
-.star-rating-group input:checked ~ label { color: #f59e0b; text-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
+.star-rating-group input:checked ~ label { color: #f59e0b; }
 .star-rating-group label:active { transform: scale(1.2); }
-.review-textarea { width: 100%; background: #2a2a35; border: 1px solid #444; border-radius: 8px; color: #fff; padding: 0.75rem 1rem; font-size: 0.95rem; resize: vertical; outline: none; box-sizing: border-box; }
-.review-textarea:focus { border-color: #f39c12; box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.2); }
-.order-selector-pill { display: inline-block; padding: 0.4rem 0.85rem; background: #2a2a35; color: #cbd5e1; border: 1px solid #444; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; margin: 0.2rem; }
-.order-selector-pill:hover, .order-selector-pill.active { background: #f39c12; color: #1e1e24; border-color: #f39c12; }
+.review-textarea { width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); padding: 0.75rem 1rem; font-size: 0.95rem; resize: vertical; outline: none; box-sizing: border-box; }
+.review-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+.order-selector-pill { display: inline-block; padding: 0.4rem 0.85rem; background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: var(--transition); margin: 0.2rem; }
+.order-selector-pill:hover, .order-selector-pill.active { background: var(--primary); color: #070B0A; border-color: var(--primary); }
 .dish-review-row { display: flex; gap: 1.25rem; align-items: flex-start; flex-wrap: wrap; }
-.dish-thumb { width: 100px; height: 100px; border-radius: 8px; object-fit: cover; background: #2a2a35; border: 1px solid #444; flex-shrink: 0; }
+.dish-thumb { width: 100px; height: 100px; border-radius: 8px; object-fit: cover; background: var(--bg-card); border: 1px solid var(--border-color); flex-shrink: 0; }
 
 /* --- Live Order Tracking Styles (track.php) --- */
 .timeline-stepper { display: flex; justify-content: space-between; position: relative; gap: 1rem; flex-wrap: wrap; }
-.timeline-stepper::before { content: ''; position: absolute; top: 24px; left: 40px; right: 40px; height: 3px; background: var(--border-color); z-index: 1; }
+.timeline-stepper::before { content: ''; position: absolute; top: 24px; left: 40px; right: 40px; height: 2px; background: var(--border-color); z-index: 1; }
 .step-item { position: relative; z-index: 2; text-align: center; flex: 1; min-width: 120px; }
-.step-circle { width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 700; transition: var(--transition); }
-.step-completed .step-circle { background: var(--success); color: #fff; box-shadow: 0 0 12px rgba(16, 185, 129, 0.4); }
-.step-current .step-circle { background: var(--primary); color: #000; box-shadow: 0 0 18px var(--primary-glow); animation: pulse 1.8s infinite; }
-.step-pending .step-circle { background: var(--bg-surface); color: var(--text-muted); border: 2px dashed var(--border-color); }
-.step-title { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.15rem; }
+.step-circle { width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; transition: var(--transition); }
+.step-completed .step-circle { background: var(--success); color: #070B0A; }
+.step-current .step-circle { background: var(--primary); color: #070B0A; }
+.step-pending .step-circle { background: var(--bg-surface); color: var(--text-muted); border: 1.5px dashed var(--border-color); }
+.step-title { font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.15rem; }
 .step-completed .step-title { color: var(--success); }
 .step-current .step-title { color: var(--primary); }
 .step-pending .step-title { color: var(--text-muted); }
@@ -33,11 +33,11 @@
 .history-list { position: relative; padding-left: 1.5rem; }
 .history-list::before { content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: var(--border-color); }
 .history-item { position: relative; margin-bottom: 1.25rem; }
-.history-marker { position: absolute; left: -1.5rem; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: var(--primary); border: 3px solid var(--bg-card); }
+.history-marker { position: absolute; left: -1.5rem; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--primary); border: 2px solid var(--bg-card); }
 .history-content { background: var(--bg-surface); padding: 0.75rem 0.9rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); }
 
 /* --- Responsive & Helper Classes --- */
-@keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); } 70% { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
 @media (max-width: 860px) { form#checkoutForm > div { grid-template-columns: 1fr !important; } }
 @media (max-width: 768px) { .timeline-stepper::before { display: none; } div[style*="grid-template-columns: 1fr 340px"], div[style*="grid-template-columns: 1fr 380px"] { grid-template-columns: 1fr !important; } }
 

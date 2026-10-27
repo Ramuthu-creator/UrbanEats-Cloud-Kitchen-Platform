@@ -21,10 +21,10 @@ $currentUser = current_user();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($pageTitle) ?></title>
     <meta name="description" content="UrbanEats - Colombo's premier multi-cuisine cloud kitchen delivering authentic Sri Lankan, Biryani, and Street Food.">
-    <!-- Master Shared Stylesheet -->
-    <link rel="stylesheet" href="<?= asset('css/style.css') ?>">
-    <link rel="stylesheet" href="<?= asset('css/orders.css') ?>">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍛</text></svg>">
+    <!-- Master Shared Stylesheet (Auto Cache-Busting) -->
+    <link rel="stylesheet" href="<?= asset('css/style.css') ?>?v=<?= file_exists(__DIR__ . '/../public/css/style.css') ? filemtime(__DIR__ . '/../public/css/style.css') : time() ?>">
+    <link rel="stylesheet" href="<?= asset('css/orders.css') ?>?v=<?= file_exists(__DIR__ . '/../public/css/orders.css') ? filemtime(__DIR__ . '/../public/css/orders.css') : time() ?>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍽️</text></svg>">
 </head>
 <body>
 
@@ -33,7 +33,7 @@ $currentUser = current_user();
         <div class="header-inner">
             <!-- Brand Identity -->
             <a href="<?= base_url('public/index.php') ?>" class="brand-logo" aria-label="UrbanEats Cloud Kitchen Home">
-                <span class="logo-badge" aria-hidden="true">🍛</span>
+                <span class="logo-badge" aria-hidden="true">🍽️</span>
                 <span class="brand-name">Urban<span class="brand-highlight">Eats</span></span>
             </a>
 

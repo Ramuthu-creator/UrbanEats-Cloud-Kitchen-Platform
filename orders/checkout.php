@@ -140,7 +140,7 @@ require_once __DIR__ . '/../includes/header.php';
 
 <div class="container" style="max-width: 1100px; margin-top: 1rem; margin-bottom: 3rem;">
     <div style="margin-bottom: 1.5rem;">
-        <span class="badge badge-customer">Component C &bull; Checkout Transaction</span>
+        <span class="badge badge-customer">Fulfillment &bull; Secure Checkout</span>
         <h1 style="margin: 0.3rem 0; font-size: 2.2rem;">Complete Your Order</h1>
         <p style="color:var(--text-muted); margin:0;">Select fulfillment, provide details, and submit your order.</p>
     </div>

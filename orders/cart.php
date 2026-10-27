@@ -122,7 +122,7 @@ require_once __DIR__ . '/../includes/header.php';
 <div class="container" style="max-width: 1100px; margin-top: 1rem; margin-bottom: 3rem;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
         <div>
-            <span class="badge badge-customer">Component C &bull; Shopping Cart</span>
+            <span class="badge badge-customer">Fresh Orders &bull; Dining Cart</span>
             <h1 style="margin: 0.3rem 0; font-size: 2.2rem;">Your Dining Cart 🛒</h1>
             <p style="color:var(--text-muted); margin:0;">Review chosen dishes, adjust quantities, or enter promotional coupons.</p>
         </div>

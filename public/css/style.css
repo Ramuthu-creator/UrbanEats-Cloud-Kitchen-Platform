@@ -6,39 +6,38 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-/* --- Root Design Tokens --- */
+/* --- Root Design Tokens (Emerald Jade & Mint Teal Luxury Culinary Theme - 0% Orange) --- */
 :root {
-    --primary: #F59E0B;
-    --primary-hover: #D97706;
-    --primary-light: rgba(245, 158, 11, 0.12);
-    --primary-glow: rgba(245, 158, 11, 0.35);
+    --primary: #00C988;
+    --primary-hover: #00A870;
+    --primary-light: rgba(0, 201, 136, 0.12);
 
-    --accent: #FF5A36;
-    --accent-hover: #E04826;
-    --accent-light: rgba(255, 90, 54, 0.12);
+    --accent: #06B6D4;
+    --accent-hover: #0891B2;
+    --accent-light: rgba(6, 182, 212, 0.14);
 
-    --bg-dark: #0B0F19;
-    --bg-surface: #111827;
-    --bg-card: #1F2937;
-    --bg-card-hover: #283548;
-    --bg-glass: rgba(31, 41, 55, 0.75);
+    --bg-dark: #070B0A;
+    --bg-surface: #0E1513;
+    --bg-card: #151F1C;
+    --bg-card-hover: #1D2A26;
+    --bg-glass: rgba(21, 31, 28, 0.85);
 
-    --text-primary: #F9FAFB;
-    --text-secondary: #9CA3AF;
-    --text-muted: #6B7280;
-    --text-inverse: #0B0F19;
+    --text-primary: #F0FDF4;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --text-inverse: #070B0A;
 
     --border-color: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(245, 158, 11, 0.4);
+    --border-hover: rgba(0, 201, 136, 0.45);
 
-    --success: #10B981;
-    --success-bg: rgba(16, 185, 129, 0.15);
-    --error: #EF4444;
-    --error-bg: rgba(239, 68, 68, 0.15);
-    --warning: #F59E0B;
-    --warning-bg: rgba(245, 158, 11, 0.15);
-    --info: #3B82F6;
-    --info-bg: rgba(59, 130, 246, 0.15);
+    --success: #00C988;
+    --success-bg: rgba(0, 201, 136, 0.15);
+    --error: #F43F5E;
+    --error-bg: rgba(244, 63, 94, 0.15);
+    --warning: #EAB308;
+    --warning-bg: rgba(234, 179, 8, 0.15);
+    --info: #06B6D4;
+    --info-bg: rgba(6, 182, 212, 0.15);
 
     --radius-sm: 6px;
     --radius-md: 10px;
@@ -46,10 +45,9 @@
     --radius-xl: 24px;
     --radius-full: 9999px;
 
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
-    --shadow-glow: 0 0 25px var(--primary-glow);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
 
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -132,7 +130,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 /* --- Header & Navigation Bar --- */
 .site-header {
-    background-color: rgba(17, 24, 39, 0.92);
+    background-color: rgba(14, 21, 19, 0.96);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border-color);
@@ -157,15 +155,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 
 .logo-badge {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    width: 38px;
+    height: 38px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
-    box-shadow: 0 4px 12px var(--primary-glow);
+    font-size: 1.25rem;
+    transition: var(--transition);
+}
+
+.brand-logo:hover .logo-badge {
+    border-color: var(--primary);
+    background: var(--bg-card-hover);
 }
 
 .brand-name {
@@ -276,27 +280,46 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary) 0%, #E68A00 100%);
-    color: #0B0F19;
-    box-shadow: 0 4px 12px var(--primary-glow);
+    background: var(--primary);
+    color: #070B0A;
+    font-weight: 700;
+    border: 1px solid var(--primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #FFB020 0%, var(--primary) 100%);
-    color: #0B0F19;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px var(--primary-glow);
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: #070B0A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 .btn-accent {
-    background: linear-gradient(135deg, var(--accent) 0%, #D83B18 100%);
-    color: #FFFFFF;
+    background: var(--accent);
+    color: #070B0A;
+    font-weight: 700;
+    border: 1px solid var(--accent);
 }
 
 .btn-accent:hover {
-    background: linear-gradient(135deg, #FF6F4E 0%, var(--accent) 100%);
-    color: #FFFFFF;
-    transform: translateY(-2px);
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+    color: #070B0A;
+    transform: translateY(-1px);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-outline:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -545,9 +568,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 
 .badge-staff {
-    background: rgba(245, 158, 11, 0.18);
-    color: #FCD34D;
-    border: 1px solid rgba(245, 158, 11, 0.4);
+    background: rgba(6, 182, 212, 0.18);
+    color: #67E8F9;
+    border: 1px solid rgba(6, 182, 212, 0.4);
 }
 
 .badge-customer {
@@ -746,10 +769,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    background: rgba(59, 130, 246, 0.15);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    color: #93C5FD;
-    padding: 0.25rem 0.75rem;
+    background: rgba(0, 201, 136, 0.12);
+    border: 1px solid rgba(0, 201, 136, 0.35);
+    color: #6EE7B7;
+    padding: 0.3rem 0.85rem;
     border-radius: var(--radius-full);
     font-size: 0.75rem;
     font-weight: 600;

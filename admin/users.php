@@ -190,7 +190,7 @@ $users = $stmt->fetchAll();
 <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <div>
-            <span class="badge badge-admin">Component A Core</span>
+            <span class="badge badge-admin">User Governance</span>
             <h1 style="margin-top: 0.4rem;">User Accounts Management</h1>
             <p style="margin-bottom: 0;">Search, filter, toggle account active states, and manage user roles</p>
         </div>
