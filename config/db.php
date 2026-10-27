@@ -67,7 +67,7 @@ function get_db(): PDO {
     } catch (PDOException $e) {
         // Fallback for standalone demo/testing environments where MySQL server isn't running yet
         $sqlitePath = dirname(__DIR__) . '/database/urbaneats_dev.sqlite';
-        if (getenv('DB_DRIVER') === 'sqlite' || !defined('DB_STRICT_MYSQL')) {
+        if (getenv('DB_DRIVER') === 'sqlite' || !defined('DB_STRICT_MYSQL') || !DB_STRICT_MYSQL) {
             try {
                 $sqlitePdo = new PDO('sqlite:' . $sqlitePath, null, null, [
                     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
